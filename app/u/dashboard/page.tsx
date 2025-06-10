@@ -245,37 +245,50 @@ export default function DashboardPage() {
         {/* Pending Approval Overlay */}
       {hasPendingAccount && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/95 backdrop-blur">
-            <CardContent className="pt-8 pb-8 px-8 text-center">
-              <div className="mb-6">
-                <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
-                  <Clock className="h-8 w-8 text-amber-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Under Review</h2>
-                <p className="text-gray-600 leading-relaxed">
-                  Your account is currently awaiting approval. We're reviewing your information and will notify you once
-                  the process is complete.
-                </p>
-              </div>
+      <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/95 backdrop-blur">
+        <CardContent className="pt-8 pb-8 px-8 text-center">
+          <div className="mb-6">
+            <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+              <Clock className="h-8 w-8 text-amber-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Under Review</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Your account is currently awaiting approval. We're reviewing your information and will notify you once
+              the process is complete.
+            </p>
+          </div>
 
-              <div className="space-y-3">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <div className="flex items-center gap-3">
-                    <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-                    <div className="text-left">
-                      <p className="text-sm font-medium text-amber-800">Approval in Progress</p>
-                      <p className="text-xs text-amber-700 mt-1">This usually takes 1-3 business days</p>
-                    </div>
-                  </div>
+          <div className="space-y-3">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+                <div className="text-left">
+                  <p className="text-sm font-medium text-amber-800">Approval in Progress</p>
+                  <p className="text-xs text-amber-700 mt-1">This usually takes 1-3 business days</p>
                 </div>
-
-                <Button variant="outline" className="w-full" onClick={() => router.push("/u/support")}>
-                  Contact Support
-                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+
+            {/* Contact Support with mailto */}
+            <a href="mailto:support@yourbank.com" className="block">
+              <Button variant="outline" className="w-full">
+                Contact Support
+              </Button>
+            </a>
+
+            {/* Logout Button */}
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {loggingOut ? "Logging out..." : "Logout"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
       )}
 
         {/* Main Dashboard Content - Disabled when pending */}

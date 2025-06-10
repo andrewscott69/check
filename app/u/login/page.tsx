@@ -74,7 +74,7 @@ export default function LoginPage() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
             <DollarSign className="h-8 w-8 text-primary" />
-            <span>BankApp</span>
+            <span>Silver Crest</span>
           </Link>
 
           {/* Header */}
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+                <Link href="/u/forgot-password" className="text-sm text-primary hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -159,13 +159,10 @@ export default function LoginPage() {
             </div>
             
           </div>
-
-         
-
           {/* Sign up link */}
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-medium text-primary hover:underline">
+            <Link href="/u/signup" className="font-medium text-primary hover:underline">
               Sign up
             </Link>
           </div>
@@ -190,7 +187,7 @@ export default function LoginPage() {
             </p>
             <footer className="mt-4">
               <div className="font-medium">Ismael Rasaqi</div>
-              <div className="text-sm text-white/80">Financial Advisor</div>
+              <div className="text-sm text-white/80">Financial Expert</div>
             </footer>
           </blockquote>
         </div>

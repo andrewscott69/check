@@ -47,7 +47,7 @@ export function UserNav() {
       });
 
       if (response.ok) {
-        router.push("/login");
+        router.push("/u/login");
       }
     } catch (error) {
       console.error("Logout failed:", error);

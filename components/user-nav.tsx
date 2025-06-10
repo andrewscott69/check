@@ -1,7 +1,8 @@
 "use client"
+
 import Link from "next/link"
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { CreditCard, LogOut, Settings, User } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,94 +17,97 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+type UserData = {
+  name: string
+  email: string
+}
 
 export function UserNav() {
-  const [loading, setLoading] = useState(false);
-  // const [userData, setUserData] = useState<any>(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false)
+  const [userData, setUserData] = useState<UserData | null>(null)
+  const router = useRouter()
 
-  // useEffect(() => {
-  //   const fetchDashboard = async () => {
-  //     try {
-  //       const res = await fetch("/api/dashboard");
-  //       const data = await res.json();
-  //       setUserData(data);
-  //     } catch (error) {
-  //       console.error("Error loading dashboard:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/dashboard")
+        const data = await res.json()
+        setUserData(data)
+      } catch (error) {
+        console.error("Failed to load user info:", error)
+      }
+    }
 
-  //   fetchDashboard();
-  // }, []);
+    fetchUser()
+  }, [])
 
+  const getInitials = (name?: string) => {
+    if (!name) return "JD"
+    const parts = name.split(" ")
+    const initials = parts[0][0] + (parts[1]?.[0] ?? "")
+    return initials.toUpperCase()
+  }
 
   const handleLogout = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       const response = await fetch("/api/auth/logout", {
         method: "POST",
-      });
-
+      })
       if (response.ok) {
-        router.push("/u/login");
+        router.push("/u/login")
       }
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Logout failed:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder-user.jpg" alt="John Doe" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src="/placeholder-user.jpg" alt={userData?.name || "User"} />
+            <AvatarFallback>{getInitials(userData?.name)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none"></p> 
-            {/* {userData.email} */}
-            <p className="text-xs leading-none text-muted-foreground"></p>
-            {/* {userData.email} */}
+            <p className="text-sm font-medium leading-none">{userData?.name || "Loading..."}</p>
+            <p className="text-xs leading-none text-muted-foreground">{userData?.email || ""}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/settings">
+            <Link href="/u/settings">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/cards">
+            <Link href="/u/cards">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Cards</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/settings">
+            <Link href="/u/settings">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-        <span  onClick={handleLogout}  className="flex ">
-            <LogOut className="mr-2 h-4 w-4" />
-            {loading ? "Logging out..." : "Logout"}
-          </span>
+        <DropdownMenuItem onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          {loading ? "Logging out..." : "Logout"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
-

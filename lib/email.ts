@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_SERVER_HOST || process.env.SMTP_HOST,
   port: Number(process.env.EMAIL_SERVER_PORT || process.env.SMTP_PORT),
-  secure: Number(process.env.EMAIL_SERVER_PORT || process.env.SMTP_PORT) === 465, // force secure=true for port 465
+  secure: Number(process.env.EMAIL_SERVER_PORT || process.env.SMTP_PORT) === 587, 
   auth: {
     user: process.env.EMAIL_SERVER_USER || process.env.SMTP_USER,
     pass: process.env.EMAIL_SERVER_PASSWORD || process.env.SMTP_PASS,

@@ -152,13 +152,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            
-          </div>
+  
           {/* Sign up link */}
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}

@@ -1,3 +1,5 @@
+// app/u/transactions/[id]/page.tsx
+
 import Link from "next/link"
 import { ArrowDown, ArrowLeft, DollarSign, Download, MapPin, Share2 } from "lucide-react"
 
@@ -7,8 +9,15 @@ import { Separator } from "@/components/ui/separator"
 import { MobileNav } from "@/components/mobile-nav"
 import { UserNav } from "@/components/user-nav"
 
-export default function TransactionDetailsPage({ params }: { params: { id: string } }) {
-  // In a real app, you would fetch transaction details based on the ID
+// ✅ Define props for the App Router route
+type TransactionDetailsPageProps = {
+  params: {
+    id: string
+  }
+}
+
+// ✅ Default export component with correct props typing
+export default function TransactionDetailsPage({ params }: TransactionDetailsPageProps) {
   const transaction = {
     id: params.id,
     description: "Starbucks Coffee",
@@ -69,11 +78,11 @@ export default function TransactionDetailsPage({ params }: { params: { id: strin
                     transaction.type === "credit" ? "bg-emerald-100" : "bg-rose-100"
                   }`}
                 >
-                  {transaction.type === "credit" ? (
-                    <ArrowDown className={`h-8 w-8 text-emerald-600`} />
-                  ) : (
-                    <ArrowDown className={`h-8 w-8 text-rose-600`} />
-                  )}
+                  <ArrowDown
+                    className={`h-8 w-8 ${
+                      transaction.type === "credit" ? "text-emerald-600" : "text-rose-600"
+                    }`}
+                  />
                 </div>
               </div>
               <Separator />
@@ -121,4 +130,3 @@ export default function TransactionDetailsPage({ params }: { params: { id: strin
     </div>
   )
 }
-

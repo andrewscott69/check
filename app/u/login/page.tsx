@@ -157,21 +157,10 @@ export default function LoginPage() {
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
+            
           </div>
 
-          {/* Social Login */}
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" disabled={isLoading} className="w-full">
-              Google
-            </Button>
-            <Button variant="outline" disabled={isLoading} className="w-full flex gap-2">
-              <Apple className="h-4 w-4" />
-              Apple
-            </Button>
-          </div>
+         
 
           {/* Sign up link */}
           <div className="text-center text-sm">
@@ -196,11 +185,11 @@ export default function LoginPage() {
         <div className="absolute bottom-8 left-8 right-8">
           <blockquote className="text-white">
             <p className="text-lg font-medium">
-              "BankApp has revolutionized how I manage my finances. The interface is intuitive and the security features
+              "Silver Crest has revolutionized how I manage my finances. The interface is intuitive and the security features
               give me peace of mind."
             </p>
             <footer className="mt-4">
-              <div className="font-medium">Sarah Johnson</div>
+              <div className="font-medium">Ismael Rasaqi</div>
               <div className="text-sm text-white/80">Financial Advisor</div>
             </footer>
           </blockquote>

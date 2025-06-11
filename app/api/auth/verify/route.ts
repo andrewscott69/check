@@ -65,19 +65,23 @@ export async function POST(request: Request) {
     });
 
     
-    const { firstName } = user;
+   // const { firstName } = user;
 
     
-    await sendEmail({
+   await sendEmail({
   to: email,
   subject: "Account Creation!",
   title: "Welcome to SilverCrest Bank!",
   message: `
-    Dear ${firstName},<br /><br />
+    Dear Customer,<br /><br />
     Your account has been verified successfully. Please note that it will take <strong>5 to 7 business days</strong> for your account to become fully active and ready for use.<br /><br />
     Thank you for joining us!
   `,
-})
+  ctaText: "Visit Your Dashboard",
+  ctaUrl: "https://silvercrestbank.com/dashboard",
+  footerNote: "Need help? Reply to this email or contact support@silvercrestbank.com.",
+});
+
 
 
     return NextResponse.json({

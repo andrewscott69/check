@@ -69,11 +69,16 @@ export async function POST(request: Request) {
 
     
     await sendEmail({
-      to: email,
-      subject: "Account Creation!",
-      title: "Welcome to SilverCrest Bank!",
-      message: `Dear ${firstName},\n\nYour account has been verified successfully. Please note that it will take 5 to 7 business days for your account to become fully active and ready for use.\n\nThank you for joining us!`,
-    });
+  to: email,
+  subject: "Account Creation!",
+  title: "Welcome to SilverCrest Bank!",
+  message: `
+    Dear ${firstName},<br /><br />
+    Your account has been verified successfully. Please note that it will take <strong>5 to 7 business days</strong> for your account to become fully active and ready for use.<br /><br />
+    Thank you for joining us!
+  `,
+})
+
 
     return NextResponse.json({
       success: true,

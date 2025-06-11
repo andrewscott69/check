@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendEmail } from "@/lib/email"; 
+import { sendEmail } from "@/lib/email";
 
 // Safe helper to normalize token to 6-digit OTP
 function normalizeOtp(token: string | null | undefined): string | null {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const verificationToken = await prisma.verificationToken.findFirst({
       where: {
         userId: user.id,
-        type: "EMAIL_VERIFICATION", 
+        type: "EMAIL_VERIFICATION",
         expiresAt: { gt: new Date() },
       },
       orderBy: { createdAt: "desc" },
@@ -46,21 +46,14 @@ export async function POST(request: Request) {
 
     const normalizedToken = normalizeOtp(verificationToken.token);
 
-    if (!normalizedToken) {
-      return NextResponse.json(
-        { error: "Invalid verification token" },
-        { status: 400 }
-      );
-    }
-
-    if (otp !== normalizedToken) {
+    if (!normalizedToken || otp !== normalizedToken) {
       return NextResponse.json(
         { error: "Invalid verification code" },
         { status: 400 }
       );
     }
 
-    // Mark user as verified
+    
     await prisma.user.update({
       where: { id: user.id },
       data: { isVerified: true },
@@ -71,16 +64,15 @@ export async function POST(request: Request) {
       where: { id: verificationToken.id },
     });
 
-    // Send welcome email
+    
+    const { firstName } = user;
+
+    
     await sendEmail({
       to: email,
-      subject: "Welcome to Our Platform!",
-      html: `
-        <h1>Welcome to Our Platform!</h1>
-        <p>Your account has been verified successfully.</p>
-        <p>Please note that it will take <strong>5 to 7 business days</strong> for your account to become fully active and ready for use.</p>
-        <p>Thank you for joining us!</p>
-      `,
+      subject: "Account Creation!",
+      title: "Welcome to SilverCrest Bank!",
+      message: `Dear ${firstName},\n\nYour account has been verified successfully. Please note that it will take 5 to 7 business days for your account to become fully active and ready for use.\n\nThank you for joining us!`,
     });
 
     return NextResponse.json({

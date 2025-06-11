@@ -4,9 +4,13 @@ import { Clock, ChevronRight, Shield, CreditCard, Home, Smartphone, Award, Trend
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 
 export default function Page() {
   return (
+    <>
+      <SiteHeader />
     <main className="min-h-screen flex flex-col">
       {/* Hero Section */}
       <section className="relative w-full h-[500px] bg-gradient-to-r from-emerald-900 to-green-900">
@@ -733,5 +737,7 @@ export default function Page() {
         </div>
       </section>
     </main>
+      <SiteFooter />
+    </>
   )
 }

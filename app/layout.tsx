@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/site-footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Horizon Banking - Your Trusted Financial Partner",
+  title: "SilverCrest Bank - Your Trusted Financial Partner",
   description:
     "Providing personal, business, and wealth management solutions to help you achieve your financial goals.",
 }

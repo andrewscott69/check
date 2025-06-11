@@ -145,7 +145,7 @@ export default function SignupProcess() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Instant Account Opening</h1>
           <div className="flex justify-end">
-            <div className="text-2xl font-bold text-blue-600">SecureBank</div>
+            <div className="text-2xl font-bold text-blue-600">Silver Crest Bank</div>
           </div>
         </div>
 

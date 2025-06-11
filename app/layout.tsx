@@ -7,7 +7,7 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Horizon Banking - Your Trusted Financial Partner",
+  title: "SilverCrest Banking - Your Trusted Financial Partner",
   description:
     "Providing personal, business, and wealth management solutions to help you achieve your financial goals.",
 }

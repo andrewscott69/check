@@ -63,10 +63,10 @@ export function SiteHeader() {
               <span className="sr-only">Search</span>
             </Button>
 
-            <Link href="/u/signup">
+            <Link href="/u/login">
               <Button variant="ghost" className="hidden md:flex items-center gap-2 text-white">
                 <LogIn className="h-5 w-5" />
-                <span>Create Account</span>
+                <span>Log in</span>
               </Button>
             </Link>
 
@@ -92,7 +92,7 @@ export function SiteHeader() {
                     Wealth Management
                   </Link>
                   <Link href="/u/signup" className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md">
-                    Get Started
+                    Log In
                   </Link>
                 </nav>
               </SheetContent>
@@ -105,26 +105,23 @@ export function SiteHeader() {
       <div className="bg-green-700 text-white">
         <div className="container mx-auto px-4">
           <nav className="flex overflow-x-auto">
-            <Link href="/bank" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
-              BANK
+            <Link href="/checking" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              CHECKING
             </Link>
-            <Link href="/save" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
-              SAVE
+            <Link href="/savings" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              SAVINGS
             </Link>
-            <Link href="/borrow" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
-              BORROW
+            <Link href="/loans" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              LOANS
             </Link>
-            <Link href="/insure" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
-              INSURE
+            <Link href="/mortgages" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              MORTGAGES
             </Link>
-            <Link
-              href="/financial-wellness"
-              className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800"
-            >
-              FINANCIAL WELLNESS
+            <Link href="/credit-cards" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              CREDIT CARDS
             </Link>
-            <Link href="/payments" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
-              PAYMENTS
+            <Link href="/online-banking" className="px-6 py-4 text-sm font-medium whitespace-nowrap hover:bg-green-800">
+              ONLINE BANKING
             </Link>
           </nav>
         </div>

@@ -18,7 +18,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to SecureBank</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to SilverCrest Banking</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           Open your new account in minutes with our streamlined digital process. Experience banking that puts your
           financial goals first.

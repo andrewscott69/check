@@ -4,14 +4,10 @@ import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
 
 export default function BusinessBankingPage() {
   return (
-    <>
-    <SiteHeader />
-        <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col">
       {/* Hero Section */}
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
@@ -542,7 +538,5 @@ export default function BusinessBankingPage() {
         </div>
       </section>
     </main>
-    <SiteFooter />
-    </>
   )
 }

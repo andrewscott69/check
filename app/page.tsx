@@ -30,7 +30,7 @@ export default function Page() {
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium" asChild>
                 <Link href="/u/signup">
-                  OPEN NOW <ChevronRight className="ml-1 h-4 w-4" />
+                  GET STARTED<ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
               <Button
@@ -39,8 +39,8 @@ export default function Page() {
                 className="bg-white text-green-900 hover:bg-gray-100 font-medium"
                 asChild
               >
-                <Link href="/learn-more">
-                  LEARN MORE <ChevronRight className="ml-1 h-4 w-4" />
+                <Link href="/u/login">
+                  OPEN ACCOUNT <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
             </div>

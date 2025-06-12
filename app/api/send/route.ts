@@ -6,7 +6,15 @@ const prisma = new PrismaClient()
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { transferType, fromAccountId, amount, recipientData, reference, note, scheduledDate } = body
+    const {
+      transferType,
+      fromAccountId,
+      amount,
+      recipientData,
+      reference,
+      note,
+      scheduledDate,
+    } = body
 
     if (!transferType || !fromAccountId || !amount || !recipientData) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
@@ -30,45 +38,41 @@ export async function POST(request: NextRequest) {
     const fee = fees[transferType as keyof typeof fees] || 0
     const totalAmount = amount + fee
 
-    if (sourceAccount.availableBalance < totalAmount) {
+    if (
+      sourceAccount.availableBalance < totalAmount ||
+      sourceAccount.balance < totalAmount
+    ) {
       return NextResponse.json({ success: false, error: "Insufficient funds" }, { status: 400 })
     }
 
     const transactionId = `TXN${Date.now()}${Math.random().toString(36).substr(2, 6).toUpperCase()}`
 
-    
     let initialStatus = "PENDING"
     let adminApprovalStatus = "PENDING_REVIEW"
 
     if (sourceAccount.user.autoApprovedTransaction) {
       initialStatus = "PROCESSING"
       adminApprovalStatus = "APPROVED"
-    } else {
-      initialStatus = "PENDING"
-      adminApprovalStatus = "PENDING_REVIEW"
     }
-
 
     const estimatedArrival = getEstimatedArrival(transferType)
 
-    // Create transaction record
     const transaction = await prisma.transaction.create({
       data: {
         id: transactionId,
         userId: sourceAccount.userId,
         bankAccountId: fromAccountId,
         type: "TRANSFER",
-        amount: amount,
-        fee: fee,
+        amount,
+        fee,
         status: initialStatus as any,
         currencyType: sourceAccount.currencyType,
-        description: `${transferType.charAt(0).toUpperCase() + transferType.slice(1)} transfer to ${recipientData.name}`,
+        description: `${capitalize(transferType)} transfer to ${recipientData.name}`,
         reference: reference || "",
         fromAccount: sourceAccount.accountNumber,
         toAccount: recipientData.accountNumber || recipientData.iban || "",
         merchantName: recipientData.name,
         category: "Transfer",
-
         adminApprovalStatus: adminApprovalStatus as any,
         recipientName: recipientData.name,
         recipientAccount: recipientData.accountNumber || recipientData.iban || "",
@@ -78,43 +82,46 @@ export async function POST(request: NextRequest) {
         routingNumber: recipientData.routingNumber || "",
         iban: recipientData.iban || "",
         intermediaryBank: recipientData.intermediaryBank || "",
-        transferType: transferType,
-        estimatedArrival: estimatedArrival,
+        transferType,
+        estimatedArrival,
         scheduledDate: scheduledDate === "now" ? new Date() : new Date(scheduledDate),
       },
     })
 
+    await prisma.$transaction([
+      prisma.bankAccount.update({
+        where: { id: fromAccountId },
+        data: {
+          availableBalance: { decrement: totalAmount },
+          balance: { decrement: totalAmount },
+          lastActivityAt: new Date(),
+        },
+      }),
+      prisma.user.update({
+        where: { id: sourceAccount.userId },
+        data: {
+          totalBalance: { decrement: totalAmount },
+        },
+      }),
+    ])
 
-
-    // Update account balance (hold the funds)
-    await prisma.bankAccount.update({
-      where: { id: fromAccountId },
-      data: {
-        availableBalance: sourceAccount.availableBalance - totalAmount,
-        lastActivityAt: new Date(),
-      },
-    })
-
-    // Create notification
     await createNotification(
       sourceAccount.userId,
       transactionId,
       "TRANSACTION_INITIATED",
       "Transfer Initiated",
-      `Your ${transferType} transfer of $${amount.toFixed(2)} to ${recipientData.name} has been initiated and is pending processing.`,
+      `Your ${transferType} transfer of $${amount.toFixed(2)} to ${recipientData.name} has been initiated and is pending processing.`
     )
 
-    // Create audit log entry
     await createAuditLog(
       transactionId,
       null,
       "TRANSACTION_CREATED",
       null,
       initialStatus,
-      `Transaction created for ${transferType} transfer`,
+      `Transaction created for ${transferType} transfer`
     )
 
-    // If auto-approved, start processing
     if (initialStatus === "PROCESSING") {
       setTimeout(async () => {
         await processTransaction(transactionId, transferType)
@@ -123,15 +130,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      transactionId: transactionId,
+      transactionId,
       message: getStatusMessage(transferType, adminApprovalStatus),
       details: {
-        amount: amount,
-        fee: fee,
+        amount,
+        fee,
         total: totalAmount,
-        transferType: transferType.charAt(0).toUpperCase() + transferType.slice(1),
+        transferType: capitalize(transferType),
         recipient: recipientData.name,
-        estimatedArrival: estimatedArrival,
+        estimatedArrival,
         status: initialStatus,
         requiresApproval: adminApprovalStatus === "PENDING_REVIEW",
       },
@@ -142,14 +149,16 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// -------------------- Helper Functions --------------------
+
 function getEstimatedArrival(transferType: string): string {
   switch (transferType) {
     case "local":
       return "Same day"
     case "international":
-      return "1-3 business days"
+      return "1–3 business days"
     case "wire":
-      return "1-2 business days"
+      return "1–2 business days"
     default:
       return "Unknown"
   }
@@ -158,13 +167,13 @@ function getEstimatedArrival(transferType: string): string {
 function getProcessingDelay(transferType: string): number {
   switch (transferType) {
     case "local":
-      return 30000 // 30 seconds
+      return 30_000
     case "international":
-      return 120000 // 2 minutes
+      return 120_000
     case "wire":
-      return 60000 // 1 minute
+      return 60_000
     default:
-      return 30000
+      return 30_000
   }
 }
 
@@ -175,8 +184,19 @@ function getStatusMessage(transferType: string, approvalStatus: string): string 
   return `Your ${transferType} transfer has been initiated and is being processed.`
 }
 
-async function createNotification(userId: string, transactionId: string, type: string, title: string, message: string) {
+function capitalize(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1)
+}
+
+async function createNotification(
+  userId: string,
+  transactionId: string,
+  type: string,
+  title: string,
+  message: string
+) {
   console.log(`Notification for user ${userId}: ${title} - ${message}`)
+  
 }
 
 async function createAuditLog(
@@ -185,9 +205,10 @@ async function createAuditLog(
   action: string,
   previousStatus: string | null,
   newStatus: string,
-  notes: string,
+  notes: string
 ) {
   console.log(`Audit log: ${action} for transaction ${transactionId}`)
+  
 }
 
 async function processTransaction(transactionId: string, transferType: string) {
@@ -211,7 +232,7 @@ async function processTransaction(transactionId: string, transferType: string) {
         transactionId,
         "TRANSACTION_COMPLETED",
         "Transfer Completed",
-        `Your ${transferType} transfer of $${transaction.amount.toFixed(2)} has been completed successfully.`,
+        `Your ${transferType} transfer of $${transaction.amount.toFixed(2)} has been completed successfully.`
       )
     }
   } catch (error) {
@@ -226,4 +247,3 @@ async function processTransaction(transactionId: string, transferType: string) {
     })
   }
 }
-

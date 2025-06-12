@@ -150,28 +150,19 @@ export default function TransferPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const selectedAccountData = accounts.find(
         (acc) => acc.id === selectedAccount
       );
-      const selectedRecipientData = recipients.find(
-        (rec) => rec.id === selectedRecipient
-      );
-
+  
       const transferData = {
         transferType,
         fromAccountId: selectedAccount,
         amount: Number.parseFloat(amount),
         recipientData: {
-          name:
-            recipientType === "existing"
-              ? selectedRecipientData?.name
-              : formData.recipientName,
-          accountNumber:
-            recipientType === "existing"
-              ? selectedRecipientData?.accountNumber
-              : formData.accountNumber,
+          name: formData.recipientName,
+          accountNumber: formData.accountNumber,
           routingNumber: formData.routingNumber,
           swiftCode: formData.swiftCode,
           iban: formData.iban,
@@ -185,7 +176,7 @@ export default function TransferPage() {
         note: formData.note,
         scheduledDate: formData.transferDate,
       };
-
+  
       const response = await fetch("/api/send", {
         method: "POST",
         headers: {
@@ -193,9 +184,9 @@ export default function TransferPage() {
         },
         body: JSON.stringify(transferData),
       });
-
+  
       const result = await response.json();
-
+  
       if (result.success) {
         setTransferResult(result);
         setShowSuccess(true);
@@ -209,6 +200,7 @@ export default function TransferPage() {
       setLoading(false);
     }
   };
+  
 
   const getFee = () => {
     switch (transferType) {

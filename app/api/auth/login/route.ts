@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { compare } from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 import jwt from "jsonwebtoken"
+import { Prisma } from "@prisma/client" 
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 
@@ -29,13 +30,13 @@ export async function POST(request: Request) {
     if (!isPasswordValid) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
     }
-  const token = jwt.sign(
+
+    const token = jwt.sign(
       { userId: user.id, email: user.email },
       JWT_SECRET,
-      { expiresIn: "7d" }, 
+      { expiresIn: "7d" }
     )
 
-    
     const response = NextResponse.json({
       success: true,
       message: "Login successful",
@@ -49,18 +50,37 @@ export async function POST(request: Request) {
       },
     })
 
-   
     response.cookies.set("session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, 
+      maxAge: 60 * 60 * 24 * 7,
     })
 
     return response
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+
+    
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json({
+        error: "Database connection failed. Please try again later.",
+      }, { status: 500 })
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({
+        error: `Database error: ${error.message}`,
+      }, { status: 500 })
+    }
+
+    
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: "Invalid request format." }, { status: 400 })
+    }
+
+    
+    return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 })
   }
 }

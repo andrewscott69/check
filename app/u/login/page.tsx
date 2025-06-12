@@ -7,7 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import Link from "next/link"
 import Image from "next/image"
-import { Apple, ArrowRight, DollarSign, Eye, EyeOff, Loader2 } from "lucide-react"
+import {
+  ArrowRight,
+  DollarSign,
+  Eye,
+  EyeOff,
+  Loader2,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -45,26 +51,37 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
-
+  
       const result = await response.json()
-
+      console.log("response status:", response.status)
+      console.log("result:", result)
+  
       if (!response.ok) {
-        throw new Error(result.error || "Login failed.")
+        if (response.status === 401) {
+          toast.error(result.error || "Invalid email or password.")
+        } else if (response.status === 500) {
+          toast.error(result.error || "Server error. Please try again later.")
+        } else {
+          toast.error(result.error || "Login failed.")
+        }
+        return
       }
-
+  
       toast.success("Login successful!")
-
+  
       if (result.redirect) {
         router.push(result.redirect)
       } else {
-        throw new Error("Invalid redirect URL.")
+        toast.error("Unexpected error: missing redirect URL.")
       }
     } catch (error: unknown) {
+      console.error("Caught error:", error)
       toast.error(error instanceof Error ? error.message : "An unexpected error occurred")
     } finally {
       setIsLoading(false)
     }
   }
+  
 
   return (
     <div className="h-screen grid lg:grid-cols-2 overflow-hidden">
@@ -152,7 +169,6 @@ export default function LoginPage() {
             </Button>
           </form>
 
-  
           {/* Sign up link */}
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}
@@ -176,8 +192,7 @@ export default function LoginPage() {
         <div className="absolute bottom-8 left-8 right-8">
           <blockquote className="text-white">
             <p className="text-lg font-medium">
-              "Silver Crest has revolutionized how I manage my finances. The interface is intuitive and the security features
-              give me peace of mind."
+              "Silver Crest has revolutionized how I manage my finances. The interface is intuitive and the security features give me peace of mind."
             </p>
             <footer className="mt-4">
               <div className="font-medium">Ismael Rasaqi</div>

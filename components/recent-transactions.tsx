@@ -204,7 +204,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
 
   return (
     <div className="space-y-4">
-      {transactions.map((transaction) => (
+      {transactions.slice(0, 5).map((transaction) => (
         <div key={transaction.id} className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div

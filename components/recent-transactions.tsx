@@ -48,6 +48,7 @@ interface Transaction {
   fee: number
   status: TransactionStatus
   currencyType: CurrencyType
+  accountName: string
   description?: string | null
   txHash?: string | null
   createdAt: string | Date
@@ -109,7 +110,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
       case TransactionType.PAYMENT:
         return "bg-rose-100"
       case TransactionType.TRANSFER:
-        return "bg-blue-100"
+        return "bg-rose-100"
       default:
         return "bg-gray-100"
     }
@@ -124,7 +125,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
       case TransactionType.PAYMENT:
         return "text-rose-600"
       case TransactionType.TRANSFER:
-        return "text-blue-600"
+        return "text-rose-600"
       default:
         return "text-gray-600"
     }
@@ -137,6 +138,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
         return "+"
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
+      case TransactionType.TRANSFER:
         return "-"
       default:
         return ""

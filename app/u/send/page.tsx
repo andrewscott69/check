@@ -176,7 +176,7 @@ export default function TransferPage() {
         note: formData.note,
         scheduledDate: formData.transferDate,
       };
-  console.log(transferData);
+ 
       const response = await fetch("/api/send", {
         method: "POST",
         headers: {

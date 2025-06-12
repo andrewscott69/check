@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 
-// Match your schema's enums
+
 export enum TransactionType {
   DEPOSIT = "DEPOSIT",
   WITHDRAWAL = "WITHDRAWAL",
@@ -59,7 +59,7 @@ interface RecentTransactionsProps {
 }
 
 export function RecentTransactions({ transactions = [] }: RecentTransactionsProps) {
-  // If no transactions are provided, show empty state
+  
   if (transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -94,7 +94,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
       case TransactionType.PAYMENT:
         return <ArrowUp className="h-5 w-5 text-rose-600" />
       case TransactionType.TRANSFER:
-        return <ArrowLeftRight className="h-5 w-5 text-blue-600" />
+        return <ArrowLeftRight className="h-5 w-5 text-red-600" />
       default:
         return <ArrowDown className="h-5 w-5 text-gray-600" />
     }

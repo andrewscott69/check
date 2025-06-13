@@ -11,8 +11,8 @@ export function SiteFooter() {
             <Image
               src="/silverc.png"
               alt="Silver Crest Online Banking"
-              width={180}
-              height={50}
+              width={360}
+              height={100}
               className="h-10 w-auto mb-6"
             />
             <p className="text-gray-300 mb-4">Your trusted financial partner since 1985. FDIC Insured.</p>

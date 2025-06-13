@@ -18,7 +18,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-12">
             <Link href="/" className="flex items-center">
               <Image
-                src="/placeholder.svg?height=50&width=180"
+                src="/silverc.png"
                 alt="Horizon Banking"
                 width={180}
                 height={50}

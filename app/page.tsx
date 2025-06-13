@@ -288,7 +288,7 @@ export default function Page() {
             <div className="bg-gray-50 rounded-lg overflow-hidden shadow-sm">
               <div className="h-48 bg-green-600 relative">
                 <Image
-                  src="/placeholder.svg?height=200&width=400"
+                  src="/person-bank.jpg"
                   alt="Personal Banking"
                   fill
                   className="object-cover"
@@ -307,7 +307,7 @@ export default function Page() {
 
             <div className="bg-gray-50 rounded-lg overflow-hidden shadow-sm">
               <div className="h-48 bg-green-600 relative">
-                <Image src="/placeholder.svg?height=200&width=400" alt="Home Loans" fill className="object-cover" />
+                <Image src="/home-loans.jpg" alt="Home Loans" fill className="object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2">Home Loans</h3>
@@ -323,7 +323,7 @@ export default function Page() {
             <div className="bg-gray-50 rounded-lg overflow-hidden shadow-sm">
               <div className="h-48 bg-green-600 relative">
                 <Image
-                  src="/placeholder.svg?height=200&width=400"
+                  src="/wealth-management.jpg"
                   alt="Wealth Management"
                   fill
                   className="object-cover"
@@ -348,7 +348,7 @@ export default function Page() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px]">
-              <Image src="/placeholder.svg?height=400&width=600" alt="Online Banking" fill className="object-contain" />
+              <Image src="/online-banking.jpg" alt="Online Banking" fill className="object-contain" />
             </div>
             <div>
               <h2 className="text-3xl font-bold mb-6">Bank Anywhere, Anytime</h2>
@@ -673,7 +673,7 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px]">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/community-involvement.png"
                 alt="Community Involvement"
                 fill
                 className="object-cover rounded-lg"

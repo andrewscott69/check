@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
+import { sendEmail } from "@/lib/email" 
 
 const prisma = new PrismaClient()
 
@@ -211,6 +212,8 @@ async function createAuditLog(
   
 }
 
+
+
 async function processTransaction(transactionId: string, transferType: string) {
   try {
     await prisma.transaction.update({
@@ -227,6 +230,7 @@ async function processTransaction(transactionId: string, transferType: string) {
     })
 
     if (transaction) {
+      // Send in-app notification
       await createNotification(
         transaction.userId,
         transactionId,
@@ -234,6 +238,33 @@ async function processTransaction(transactionId: string, transferType: string) {
         "Transfer Completed",
         `Your ${transferType} transfer of $${transaction.amount.toFixed(2)} has been completed successfully.`
       )
+
+      
+      const fullName = `${transaction.user.firstName} ${transaction.user.lastName}`
+      const subject = "Debit Alert: Transfer Completed"
+      const title = "Transfer Completed Successfully"
+      const message = `
+        Hello ${fullName},<br /><br />
+        Your ${capitalize(transferType)} transfer of <strong>$${transaction.amount.toFixed(
+        2
+      )}</strong> to <strong>${transaction.recipientName}</strong> has been completed.<br /><br />
+        <strong>Transaction ID:</strong> ${transaction.id}<br />
+        <strong>Amount:</strong> $${transaction.amount.toFixed(2)}<br />
+        <strong>Fee:</strong> $${transaction.fee.toFixed(2)}<br />
+        <strong>Total Debited:</strong> $${(transaction.amount + transaction.fee).toFixed(2)}<br />
+        <strong>To:</strong> ${transaction.recipientName}<br />
+        <strong>Bank:</strong> ${transaction.recipientBank}<br />
+        <strong>Reference:</strong> ${transaction.reference || "N/A"}<br /><br />
+        If you did not authorize this transaction, please contact us immediately.
+      `
+
+      await sendEmail({
+        to: transaction.user.email,
+        subject,
+        title,
+        message,
+        footerNote: "This is an automated notification from BankApp.",
+      })
     }
   } catch (error) {
     console.error("Error processing transaction:", error)
@@ -247,3 +278,4 @@ async function processTransaction(transactionId: string, transferType: string) {
     })
   }
 }
+

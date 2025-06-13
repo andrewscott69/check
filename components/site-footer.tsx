@@ -9,8 +9,8 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <Image
-              src="/placeholder.svg?height=50&width=180"
-              alt="Horizon Banking"
+              src="/silverc.png"
+              alt="Silver Crest Online Banking"
               width={180}
               height={50}
               className="h-10 w-auto mb-6"
@@ -136,7 +136,7 @@ export function SiteFooter() {
 
         <div className="border-t border-green-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-300 mb-4 md:mb-0">© 2025 Horizon Banking. All rights reserved.</p>
+            <p className="text-sm text-gray-300 mb-4 md:mb-0">© 2025 Silver Crest Online Banking. All rights reserved.</p>
             <div className="flex flex-wrap gap-4 text-sm text-gray-300">
               <Link href="/privacy" className="hover:text-white">
                 Privacy Policy

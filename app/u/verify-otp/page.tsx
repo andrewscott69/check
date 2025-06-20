@@ -9,6 +9,7 @@ import {
   DollarSign,
   Loader2,
   Mail,
+  Phone,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,12 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
+function maskPhoneNumber(phone: string) {
+  const cleaned = phone.replace(/\D/g, "")
+  const last4 = cleaned.slice(-4)
+  return `+***-***-${last4}`
+}
+
 export default function VerifyOtpPage() {
   const router = useRouter()
   const [otp, setOtp] = useState(Array(6).fill(""))
@@ -31,21 +38,35 @@ export default function VerifyOtpPage() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const [email, setEmail] = useState("")
-  const [status, setStatus] = useState<"signup" | "login" | null>(null)
+  const [maskedPhone, setMaskedPhone] = useState<string | null>(null)
+  const [status, setStatus] = useState<"signup" | "login" | "transfer" | null>(null)
   const [isVerified, setIsVerified] = useState(false)
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  // Get stored session info
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("verificationEmail")
     const storedStatus = sessionStorage.getItem("verificationStatus")
 
     if (!storedEmail || !storedStatus) {
+      toast.error("Verification session expired. Please login again.")
       router.push("/u/login")
     } else {
       setEmail(storedEmail)
-      setStatus(storedStatus as "signup" | "login")
+      setStatus(storedStatus as "signup" | "login" | "transfer")
+
+      fetch("/api/auth/get-phone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: storedEmail }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.phone) {
+            setMaskedPhone(maskPhoneNumber(data.phone))
+          }
+        })
+        .catch(() => toast.error("Unable to retrieve phone number"))
     }
   }, [router])
 
@@ -62,7 +83,6 @@ export default function VerifyOtpPage() {
     const newOtp = [...otp]
     newOtp[index] = value
     setOtp(newOtp)
-
     if (value && index < 5) inputRefs.current[index + 1]?.focus()
   }
 
@@ -84,6 +104,11 @@ export default function VerifyOtpPage() {
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
     const otpValue = otp.join("")
+    if (!email || !status) {
+      toast.error("Missing email or status. Please restart verification.")
+      return router.push("/u/login")
+    }
+
     if (otpValue.length !== 6) return toast.error("Please enter all 6 digits")
     setIsLoading(true)
 
@@ -95,17 +120,36 @@ export default function VerifyOtpPage() {
       })
 
       const result = await response.json()
-
       if (!response.ok) throw new Error(result.error || "Verification failed")
+
+      if (status === "transfer") {
+        const transferData = sessionStorage.getItem("transferData")
+        if (!transferData) throw new Error("Missing transfer data")
+
+        const parsed = JSON.parse(transferData)
+        parsed.status = "verified"
+
+        const transferRes = await fetch("/api/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parsed),
+        })
+
+        const transferResult = await transferRes.json()
+        if (!transferRes.ok) throw new Error(transferResult.error || "Transfer failed")
+
+        toast.success("Transfer successful")
+        sessionStorage.removeItem("transferData")
+      }
 
       setIsVerified(true)
       sessionStorage.removeItem("verificationEmail")
       sessionStorage.removeItem("verificationStatus")
-
       toast.success("Verified successfully")
 
       setTimeout(() => {
         if (status === "login") router.push("/u/dashboard")
+        else if (status === "transfer") router.push("/u/dashboard/send")
         else router.push("/u/login")
       }, 2000)
     } catch (error: any) {
@@ -130,7 +174,7 @@ export default function VerifyOtpPage() {
       const result = await response.json()
       if (!response.ok) throw new Error(result.error || "Failed to resend code")
 
-      toast.success("A new verification code has been sent to your email.")
+      toast.success("A new verification code has been sent to your phone.")
     } catch (error: any) {
       toast.error("Resend failed", { description: error.message })
       setCanResend(true)
@@ -156,21 +200,30 @@ export default function VerifyOtpPage() {
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-green-600">
               <CheckCircle2 className="h-10 w-10" />
             </div>
-            <h2 className="mb-3 text-2xl font-bold text-slate-900">Email Verified!</h2>
+            <h2 className="mb-3 text-2xl font-bold text-slate-900">
+              {status === "transfer" ? "Transfer Confirmed!" : "Email Verified!"}
+            </h2>
             <p className="mb-6 text-slate-500">
               {status === "signup"
                 ? "Redirecting you to login..."
+                : status === "transfer"
+                ? "Redirecting to transactions..."
                 : "Redirecting to dashboard..."}
             </p>
             <Button asChild size="lg" className="w-full">
-              <Link href={status === "signup" ? "/u/login" : "/u/dashboard"}>
+              <Link href={
+                status === "signup"
+                  ? "/u/login"
+                  : status === "transfer"
+                  ? "/u/dashboard/send"
+                  : "/u/dashboard"
+              }>
                 Go
               </Link>
             </Button>
           </div>
         ) : (
           <>
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-transparent"></div>
             <CardHeader className="space-y-4 pb-6 pt-8">
               <div className="flex items-center">
                 <Button variant="ghost" size="icon" asChild className="mr-2 rounded-full">
@@ -178,19 +231,23 @@ export default function VerifyOtpPage() {
                     <ArrowLeft className="h-4 w-4" />
                   </Link>
                 </Button>
-                <CardTitle className="text-2xl font-bold text-slate-900">Verify your email</CardTitle>
+                <CardTitle className="text-2xl font-bold text-slate-900">
+                  {status === "transfer" ? "Confirm Transfer" : "Verify your phone number"}
+                </CardTitle>
               </div>
               <div className="flex items-center gap-3 rounded-lg bg-slate-50 p-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Mail className="h-5 w-5" />
+                  <Phone className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-900">Code sent to:</p>
-                  <p className="text-sm text-slate-500">{email}</p>
+                  <p className="text-sm font-medium text-slate-900">Code sent to Phone Number:</p>
+                  <p className="text-sm text-slate-500">{maskedPhone || "Loading..."}</p>
                 </div>
               </div>
               <CardDescription className="text-base">
-                Enter the 6-digit code to verify your account
+                {status === "transfer"
+                  ? "Enter the 6-digit code to confirm the transaction"
+                  : "Enter the 6-digit code to verify your account"}
               </CardDescription>
             </CardHeader>
 
@@ -231,7 +288,7 @@ export default function VerifyOtpPage() {
                       Verifying...
                     </>
                   ) : (
-                    "Verify Email"
+                    "Verify Code"
                   )}
                 </Button>
               </form>

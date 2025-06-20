@@ -65,7 +65,7 @@ export default function LoginPage() {
       if (result.status === "login") {
         sessionStorage.setItem("verificationEmail", result.email)
         sessionStorage.setItem("verificationStatus", "login")
-        router.push("/u/verify")
+        router.push("/u/verify-otp")
         toast.success("OTP sent to your email.")
         return
       }

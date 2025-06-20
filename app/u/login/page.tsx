@@ -14,13 +14,14 @@ import {
   EyeOff,
   Loader2,
 } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 
-// Zod validation schema
+
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
   password: z.string().min(6, "Password must be at least 6 characters."),
@@ -51,24 +52,25 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
-  
+
       const result = await response.json()
-      console.log("response status:", response.status)
-      console.log("result:", result)
-  
+      console.log("Login response:", result)
+
       if (!response.ok) {
-        if (response.status === 401) {
-          toast.error(result.error || "Invalid email or password.")
-        } else if (response.status === 500) {
-          toast.error(result.error || "Server error. Please try again later.")
-        } else {
-          toast.error(result.error || "Login failed.")
-        }
+        toast.error(result.error || "Login failed.")
         return
       }
-  
-      toast.success("Login successful!")
-  
+
+     
+      if (result.status === "login") {
+        sessionStorage.setItem("verificationEmail", result.email)
+        sessionStorage.setItem("verificationStatus", "login")
+        router.push("/u/verify")
+        toast.success("OTP sent to your email.")
+        return
+      }
+
+     
       if (result.redirect) {
         router.push(result.redirect)
       } else {
@@ -81,20 +83,19 @@ export default function LoginPage() {
       setIsLoading(false)
     }
   }
-  
 
   return (
     <div className="h-screen grid lg:grid-cols-2 overflow-hidden">
       {/* Left Column - Form */}
       <div className="flex flex-col justify-center px-8 py-8 lg:px-16 overflow-hidden">
         <div className="mx-auto w-full max-w-md space-y-6">
-          {/* Logo */}
+          
           <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
             <DollarSign className="h-8 w-8 text-primary" />
             <span>Silver Crest</span>
           </Link>
 
-          {/* Header */}
+          
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
             <p className="text-muted-foreground">Enter your credentials to access your account</p>

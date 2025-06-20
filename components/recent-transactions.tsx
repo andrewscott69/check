@@ -237,7 +237,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href={`/transactions/${transaction.id}`}>View Details</Link>
+                  <Link href={`/u/transactions/${transaction.id}`}>View Details</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>Download Receipt</DropdownMenuItem>
                 {transaction.status === TransactionStatus.PENDING && (
@@ -257,7 +257,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
       ))}
       <div className="flex justify-center">
         <Button variant="outline" asChild>
-          <Link href="/u/transactions">View All Transactions</Link>
+          <Link href="/u/dashboard/transactions">View All Transactions</Link>
         </Button>
       </div>
     </div>

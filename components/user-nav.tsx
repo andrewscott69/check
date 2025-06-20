@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 type UserData = {
-  name: string
+  firstName: string
+  lastName: string
   email: string
 }
 
@@ -31,6 +32,7 @@ export function UserNav() {
     const fetchUser = async () => {
       try {
         const res = await fetch("/api/dashboard")
+        if (!res.ok) throw new Error("Failed to fetch user")
         const data = await res.json()
         setUserData(data)
       } catch (error) {
@@ -41,11 +43,9 @@ export function UserNav() {
     fetchUser()
   }, [])
 
-  const getInitials = (name?: string) => {
-    if (!name) return "JD"
-    const parts = name.split(" ")
-    const initials = parts[0][0] + (parts[1]?.[0] ?? "")
-    return initials.toUpperCase()
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName || !lastName) return "JD"
+    return `${firstName[0]}${lastName[0]}`.toUpperCase()
   }
 
   const handleLogout = async () => {
@@ -69,16 +69,22 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder-user.jpg" alt={userData?.name || "User"} />
-            <AvatarFallback>{getInitials(userData?.name)}</AvatarFallback>
+            <AvatarImage src="/placeholder-user.jpg" className="bg-white" alt={`${userData?.firstName} ${userData?.lastName}`} />
+            <AvatarFallback className="text-black">
+              {getInitials(userData?.firstName, userData?.lastName)}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{userData?.name || "Loading..."}</p>
-            <p className="text-xs leading-none text-muted-foreground">{userData?.email || ""}</p>
+            <p className="text-sm font-medium leading-none">
+              {userData ? `${userData.firstName} ${userData.lastName}` : "Loading..."}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {userData?.email || ""}
+            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -89,7 +95,7 @@ export function UserNav() {
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/u/cards">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Cards</span>
@@ -100,7 +106,7 @@ export function UserNav() {
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>

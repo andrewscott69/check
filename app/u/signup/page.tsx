@@ -122,6 +122,7 @@ export default function SignupProcess() {
       localStorage.removeItem("signup-progress")
       localStorage.removeItem("signup-current-step")
       sessionStorage.setItem("verificationEmail", completeData.email!)
+      sessionStorage.setItem("verificationStatus", "signup") 
 
       toast.success("Account created successfully! Please verify your email.") 
 

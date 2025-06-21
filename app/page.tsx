@@ -26,14 +26,14 @@ export default function Page() {
         <div className="container relative z-10 mx-auto px-4 py-16 h-full flex flex-col justify-center">
           <div className="max-w-2xl text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Earn Up to $400 with our <span className="text-yellow-400">FREE</span> Ultimate Growth Checking Account*
+              ESecure Your Future,  <span className="text-yellow-400">Anywhere</span> in the World with Silver Crest*
             </h1>
             <p className="text-lg mb-8">
-              This free account rewards progress & automatically grows with you. *Select "Learn More" for offer details.
+              Trusted Offshore Banking Designed for Freedom, Privacy, and Peace of Mind.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium" asChild>
-                <Link href="/u/signup">
+                <Link href="/u/login">
                   GET STARTED<ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
@@ -43,7 +43,7 @@ export default function Page() {
                 className="bg-white text-green-900 hover:bg-gray-100 font-medium"
                 asChild
               >
-                <Link href="/u/login">
+                <Link href="/u/signup">
                   OPEN ACCOUNT <ChevronRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>

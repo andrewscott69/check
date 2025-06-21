@@ -26,7 +26,7 @@ export default function Page() {
         <div className="container relative z-10 mx-auto px-4 py-16 h-full flex flex-col justify-center">
           <div className="max-w-2xl text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              ESecure Your Future,  <span className="text-yellow-400">Anywhere</span> in the World with Silver Crest*
+              Secure Your Future,  <span className="text-yellow-400">Anywhere</span> in the World with Silver Crest*
             </h1>
             <p className="text-lg mb-8">
               Trusted Offshore Banking Designed for Freedom, Privacy, and Peace of Mind.

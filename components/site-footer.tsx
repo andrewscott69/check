@@ -9,7 +9,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <Image
-              src="/silverc.png"
+              src="/Silver Crest.png"
               alt="Silver Crest Online Banking"
               width={360}
               height={100}

@@ -11,7 +11,7 @@ export default function CreditCardsPage() {
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/creditcard.png"
+            src="/creditcard.jpg"
             alt="Credit Cards"
             fill
             className="object-cover opacity-40 mix-blend-overlay"

@@ -16,7 +16,7 @@ export default function Page() {
       <section className="relative w-full h-[500px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/happy-silvercouple.jpg"
+            src="/lovelycouple.jpg"
             alt="Happy couple enjoying financial freedom"
             fill
             className="object-cover opacity-40 mix-blend-overlay"

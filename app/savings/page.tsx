@@ -10,7 +10,7 @@ export default function SavingsPage() {
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/placeholder.svg?height=400&width=1920"
+            src="/savingaccc.jpg"
             alt="Savings Accounts"
             fill
             className="object-cover opacity-40 mix-blend-overlay"

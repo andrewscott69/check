@@ -267,7 +267,7 @@ export default function Page() {
                       className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                     <Button className="bg-green-700 hover:bg-green-800">
-                      <Link href="/u/contact#locations">
+                      <Link href="/contact#locations">
                         Search Locations
                       </Link>
                     </Button>
@@ -292,7 +292,7 @@ export default function Page() {
                     <h4 className="text-lg font-medium mb-2">Online Support</h4>
                     <p className="text-gray-600 mb-4">Get help with online and mobile banking.</p>
                     <Button className="bg-green-700 hover:bg-green-800 w-full">
-                      <Link href="/u/contact#sendmsg">
+                      <Link href="/contact#sendmsg">
                         Chat With Us
                       </Link>  
                     </Button>
@@ -779,7 +779,7 @@ export default function Page() {
               variant="outline"
               className="bg-transparent border-white text-white hover:bg-green-800 font-medium"
             >
-              <Link href="/u/contact#sendmsg">
+              <Link href="/contact#sendmsg">
                 Schedule Appointment <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>

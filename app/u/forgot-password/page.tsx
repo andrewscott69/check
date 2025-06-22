@@ -1,16 +1,23 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, DollarSign, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
@@ -22,18 +29,34 @@ export default function ForgotPasswordPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+
+      const result = await res.json()
+
+      if (!res.ok) {
+        toast.error(result.error || "Something went wrong.")
+        return
+      }
+
       setIsSubmitted(true)
-    }, 1500)
+      toast.success("Password reset link sent.")
+    } catch (error) {
+      toast.error("Failed to send reset link.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
       <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-bold">
         <DollarSign className="h-8 w-8 text-primary" />
-        <span>BankApp</span>
+        <span>Silver Crest Bank</span>
       </Link>
 
       <Card className="mx-auto w-full max-w-md shadow-lg">
@@ -47,15 +70,18 @@ export default function ForgotPasswordPage() {
             </Button>
             <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
           </div>
-          <CardDescription>Enter your email address and we'll send you a link to reset your password.</CardDescription>
+          <CardDescription>
+            Enter your email address and we&apos;ll send you a link to reset your password.
+          </CardDescription>
         </CardHeader>
+
         <CardContent className="space-y-4">
           {isSubmitted ? (
             <div className="rounded-lg bg-primary/10 p-4 text-center">
               <h3 className="mb-2 font-semibold text-primary">Check your email</h3>
               <p className="text-sm text-muted-foreground">
-                We've sent a password reset link to <span className="font-medium">{email}</span>. Please check your
-                inbox and follow the instructions.
+                We&apos;ve sent a password reset link to{" "}
+                <span className="font-medium">{email}</span>. Please check your inbox.
               </p>
             </div>
           ) : (
@@ -84,10 +110,11 @@ export default function ForgotPasswordPage() {
             </form>
           )}
         </CardContent>
+
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm">
             Remember your password?{" "}
-            <Link href="/login" className="font-medium text-primary hover:underline">
+            <Link href="/u/login" className="font-medium text-primary hover:underline">
               Back to login
             </Link>
           </div>
@@ -96,4 +123,3 @@ export default function ForgotPasswordPage() {
     </div>
   )
 }
-

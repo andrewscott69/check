@@ -68,14 +68,14 @@ export function SiteHeader() {
               </DialogTrigger>
               <DialogContent className="bg-white text-black max-w-md">
                 <DialogHeader>
-                  <DialogTitle>About Silver Crest Bank</DialogTitle>
+                  <DialogTitle>About Silver Crest Offshore Banking</DialogTitle>
                 </DialogHeader>
                 <p className="mt-4 text-sm leading-relaxed">
                   Silver Crest Bank is a trusted international offshore financial institution, offering global banking solutions 
                   to individuals and businesses seeking secure, private, and flexible financial services.
                 </p>
                 <a
-                  href="/documents/about-offshore-banking.pdf"
+                  href="/about-offshore-banking.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 inline-flex items-center px-4 py-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-md font-medium transition"

@@ -88,7 +88,7 @@ export default function ContactPage() {
       </section>
 
       {/* Branch Locations */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50" id="locations">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Branch Locations</h2>
 
@@ -489,7 +489,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white" id="sendmsg">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">Send Us a Message</h2>

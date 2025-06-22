@@ -240,8 +240,8 @@ export default function VerifyOtpPage() {
                   <Phone className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-900">Code sent to Phone Number:</p>
-                  <p className="text-sm text-slate-500">{maskedPhone || "Loading..."}</p>
+                  <p className="text-sm font-medium text-slate-900">Code sent to Authentication Device:</p>
+                  {/* <p className="text-sm text-slate-500">{maskedPhone || "Loading..."}</p> */}
                 </div>
               </div>
               <CardDescription className="text-base">

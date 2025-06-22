@@ -6,21 +6,21 @@ import crypto from "crypto"
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json()
+    const { id, password } = await request.json()
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
+    if (!id || !password) {
+      return new Response("Missing ID or password", { status: 400 })
     }
 
-    const user = await prisma.user.findUnique({ where: { email } })
+    const user = await prisma.user.findUnique({ where: { id } })
 
     if (!user || !user.password) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
+      return NextResponse.json({ error: "Invalid ID or password" }, { status: 401 })
     }
 
     const isPasswordValid = await compare(password, user.password)
     if (!isPasswordValid) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
+      return NextResponse.json({ error: "Invalid ID or password" }, { status: 401 })
     }
 
     if (!user.isVerified) {
@@ -28,7 +28,8 @@ export async function POST(request: Request) {
     }
 
     const token = crypto.randomBytes(32).toString("hex")
-    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24)
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 20)
+
 
     await prisma.verificationToken.create({
       data: {
@@ -39,14 +40,15 @@ export async function POST(request: Request) {
       },
     })
 
-    await sendVerificationEmail(email, token) 
-   
+    
+    await sendVerificationEmail(user.email, token)
+
     return NextResponse.json({
       success: true,
       message: "OTP sent to email",
       redirect: "/u/verify-otp",
-      status: "login", 
-      email,
+      status: "login",
+      email: user.email, 
     })
   } catch (error) {
     console.error("Login error:", error)

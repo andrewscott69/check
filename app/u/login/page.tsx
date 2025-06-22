@@ -21,9 +21,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 
-
+// Validation schema
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
+  id: z
+    .string()
+    .min(5, "ID is required")
+    .regex(/^SC-[A-Z0-9]+$/, "Invalid ID format. Example: SC-123AB"),
   password: z.string().min(6, "Password must be at least 6 characters."),
 })
 
@@ -54,14 +57,12 @@ export default function LoginPage() {
       })
 
       const result = await response.json()
-      console.log("Login response:", result)
 
       if (!response.ok) {
         toast.error(result.error || "Login failed.")
         return
       }
 
-     
       if (result.status === "login") {
         sessionStorage.setItem("verificationEmail", result.email)
         sessionStorage.setItem("verificationStatus", "login")
@@ -70,7 +71,6 @@ export default function LoginPage() {
         return
       }
 
-     
       if (result.redirect) {
         router.push(result.redirect)
       } else {
@@ -85,34 +85,41 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="h-screen grid lg:grid-cols-2 overflow-hidden">
-      {/* Left Column - Form */}
-      <div className="flex flex-col justify-center px-8 py-8 lg:px-16 overflow-hidden">
-        <div className="mx-auto w-full max-w-md space-y-6">
-          
-          <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
-            <DollarSign className="h-8 w-8 text-primary" />
+    <div className="relative w-full h-screen">
+      {/* Background Image */}
+      <Image
+        src="/login-bg.jpg"
+        alt="Background"
+        fill
+        className="object-cover z-0"
+        priority
+      />
+      <div className="absolute inset-0 bg-black/60 z-10" />
+
+      {/* Centered Login Form */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 space-y-6">
+          <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-primary">
+            <DollarSign className="h-7 w-7" />
             <span>Silver Crest</span>
           </Link>
 
-          
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="text-muted-foreground">Enter your credentials to access your account</p>
+            <h1 className="text-xl font-semibold">Welcome back</h1>
+            <p className="text-sm text-muted-foreground">Enter your ID and password to access your account</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="id">Customer ID</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                {...register("email")}
-                className={errors.email ? "border-red-500" : ""}
+                id="id"
+                type="text"
+                placeholder="SC-123AB"
+                {...register("id")}
+                className={errors.id ? "border-red-500" : ""}
               />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+              {errors.id && <span className="text-red-500 text-sm">{errors.id.message}</span>}
             </div>
 
             <div className="space-y-2">
@@ -142,14 +149,17 @@ export default function LoginPage() {
                   ) : (
                     <Eye className="h-4 w-4 text-muted-foreground" />
                   )}
-                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                 </Button>
               </div>
               {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
             </div>
 
             <div className="flex items-center space-x-2">
-              <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(!!checked)} />
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(!!checked)}
+              />
               <Label htmlFor="remember" className="text-sm font-medium">
                 Remember me
               </Label>
@@ -170,36 +180,12 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Sign up link */}
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/u/signup" className="font-medium text-primary hover:underline">
               Sign up
             </Link>
           </div>
-        </div>
-      </div>
-
-      {/* Right Column - Image */}
-      <div className="hidden lg:block relative bg-blue-600 opacity-70">
-        <Image
-          src="/login-bg.jpg?height=1080&width=1920"
-          alt="Banking application dashboard"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        <div className="absolute bottom-8 left-8 right-8">
-          <blockquote className="text-white">
-            <p className="text-lg font-medium">
-              "Silver Crest has revolutionized how I manage my finances. The interface is intuitive and the security features give me peace of mind."
-            </p>
-            <footer className="mt-4">
-              <div className="font-medium">Ismael Rasaqi</div>
-              <div className="text-sm text-white/80">Financial Expert</div>
-            </footer>
-          </blockquote>
         </div>
       </div>
     </div>

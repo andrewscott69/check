@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Search, LogIn, Menu } from "lucide-react"
+import { Search, Info, LogIn, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useState } from "react"
 
 export function SiteHeader() {
@@ -58,10 +59,36 @@ export function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="text-white">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white">
+                  <Info className="h-5 w-5" />
+                  <span className="sr-only">About Silver Crest Bank</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-white text-black max-w-md">
+                <DialogHeader>
+                  <DialogTitle>About Silver Crest Bank</DialogTitle>
+                </DialogHeader>
+                <p className="mt-4 text-sm leading-relaxed">
+                  Silver Crest Bank is a trusted international offshore financial institution, offering global banking solutions 
+                  to individuals and businesses seeking secure, private, and flexible financial services.
+                </p>
+                <a
+                  href="/documents/about-offshore-banking.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center px-4 py-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-md font-medium transition"
+                >
+                  Learn More About Offshore Banking
+                </a>
+              </DialogContent>
+            </Dialog>
+
+{/*             <Button variant="ghost" size="icon" className="text-white">
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
-            </Button>
+            </Button> */}
 
             <Link href="/u/login">
               <Button variant="ghost" className="hidden md:flex items-center gap-2 text-white">

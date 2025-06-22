@@ -16,7 +16,7 @@ export function SiteFooter() {
               className="h-10 w-auto mb-6"
             />
             <p className="text-gray-300 mb-4">Your trusted financial partner since 1985. FDIC Insured.</p>
-            <div className="flex space-x-4">
+{/*             <div className="flex space-x-4">
               <Link href="#" className="text-gray-300 hover:text-white">
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
@@ -37,7 +37,7 @@ export function SiteFooter() {
                 <Youtube className="h-5 w-5" />
                 <span className="sr-only">YouTube</span>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           <div>
@@ -71,7 +71,7 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
+{/*           <div>
             <h3 className="font-bold text-lg mb-4">Business Banking</h3>
             <ul className="space-y-2">
               <li>
@@ -100,13 +100,13 @@ export function SiteFooter() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h3 className="font-bold text-lg mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/locations" className="text-gray-300 hover:text-white">
+                <Link href="/contact#locations" className="text-gray-300 hover:text-white">
                   Branch Locations
                 </Link>
               </li>
@@ -115,7 +115,7 @@ export function SiteFooter() {
                   About Us
                 </Link>
               </li>
-              <li>
+{/*               <li>
                 <Link href="/careers" className="text-gray-300 hover:text-white">
                   Careers
                 </Link>
@@ -124,7 +124,7 @@ export function SiteFooter() {
                 <Link href="/security" className="text-gray-300 hover:text-white">
                   Security Center
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact" className="text-gray-300 hover:text-white">
                   Contact Us
@@ -137,7 +137,7 @@ export function SiteFooter() {
         <div className="border-t border-green-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-gray-300 mb-4 md:mb-0">© 2025 Silver Crest Online Banking. All rights reserved.</p>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-300">
+{/*             <div className="flex flex-wrap gap-4 text-sm text-gray-300">
               <Link href="/privacy" className="hover:text-white">
                 Privacy Policy
               </Link>
@@ -150,7 +150,7 @@ export function SiteFooter() {
               <Link href="/disclosures" className="hover:text-white">
                 Disclosures
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

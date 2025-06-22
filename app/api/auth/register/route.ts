@@ -4,16 +4,40 @@ import { prisma } from "@/lib/prisma"
 import { sendVerificationEmail } from "@/lib/email"
 import crypto from "crypto"
 
+// --- Helper: Generate Random ID ---
+function generateCustomUserId(): string {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  const randomLetters = Array.from({ length: 2 }, () =>
+    letters[Math.floor(Math.random() * letters.length)]
+  ).join("")
 
+  const randomNumbers = Math.floor(100 + Math.random() * 900) // 3-digit number
+
+  return `SC-${randomNumbers}${randomLetters}`
+}
+
+// --- Helper: Ensure ID is Unique ---
+async function generateUniqueUserId(): Promise<string> {
+  let id: string
+  let exists = true
+
+  do {
+    id = generateCustomUserId()
+    const existing = await prisma.user.findUnique({ where: { id } })
+    exists = !!existing
+  } while (exists)
+
+  return id
+}
+
+// --- Account Number Generator ---
 function generateAccountNumber(): string {
-  const timestamp = Date.now().toString().slice(-6) // Last 6 digits of timestamp
-  const random = Math.floor(Math.random() * 10000)
-    .toString()
-    .padStart(4, "0")
+  const timestamp = Date.now().toString().slice(-6) 
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, "0")
   return timestamp + random
 }
 
-
+// --- Get Account Name ---
 function getDefaultAccountName(accountType: string, firstName: string): string {
   const typeMap: Record<string, string> = {
     CHECKING: "Checking Account",
@@ -27,20 +51,21 @@ function getDefaultAccountName(accountType: string, firstName: string): string {
   return `${firstName}'s ${typeMap[accountType] || "Account"}`
 }
 
-
+// --- Interest Rates ---
 function getInterestRate(accountType: string): number {
   const rateMap: Record<string, number> = {
-    CHECKING: 0.01, // 0.01% APY
-    SAVINGS: 0.5, // 0.50% APY
-    BUSINESS_CHECKING: 0.01, // 0.01% APY
-    BUSINESS_SAVINGS: 0.75, // 0.75% APY
-    MONEY_MARKET: 1.25, // 1.25% APY
-    CERTIFICATE_OF_DEPOSIT: 2.5, // 2.50% APY
+    CHECKING: 0.01,
+    SAVINGS: 0.5,
+    BUSINESS_CHECKING: 0.01,
+    BUSINESS_SAVINGS: 0.75,
+    MONEY_MARKET: 1.25,
+    CERTIFICATE_OF_DEPOSIT: 2.5,
   }
 
   return rateMap[accountType] || 0.0
 }
 
+// --- Main Signup Handler ---
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -64,7 +89,6 @@ export async function POST(request: Request) {
       agreeToTerms,
     } = body
 
-    
     if (!email || !password || !firstName || !lastName || !accountType) {
       return NextResponse.json({ error: "Required fields are missing" }, { status: 400 })
     }
@@ -73,7 +97,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "You must agree to the terms and conditions" }, { status: 400 })
     }
 
-    
     const validAccountTypes = [
       "CHECKING",
       "SAVINGS",
@@ -82,22 +105,22 @@ export async function POST(request: Request) {
       "MONEY_MARKET",
       "CERTIFICATE_OF_DEPOSIT",
     ]
+
     if (!validAccountTypes.includes(accountType)) {
       return NextResponse.json({ error: "Invalid account type" }, { status: 400 })
     }
 
-    
     const existingUser = await prisma.user.findUnique({ where: { email } })
     if (existingUser) {
       return NextResponse.json({ error: "User already exists" }, { status: 409 })
     }
 
-    
     const hashedPassword = await bcrypt.hash(password, 10)
+    const uniqueId = await generateUniqueUserId()
 
-    
     const newUser = await prisma.user.create({
       data: {
+        id: uniqueId,
         email,
         password: hashedPassword,
         firstName,
@@ -139,9 +162,8 @@ export async function POST(request: Request) {
       },
     })
 
-    
     const token = crypto.randomBytes(32).toString("hex")
-    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24)
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 20) 
 
     await prisma.verificationToken.create({
       data: {
@@ -152,7 +174,6 @@ export async function POST(request: Request) {
       },
     })
 
-    
     await sendVerificationEmail(email, token)
 
     return NextResponse.json(
@@ -166,12 +187,11 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
-    console.error("Register API error:", error);
-  
+    console.error("Register API error:", error)
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Something went wrong" },
       { status: 500 }
-    );
+    )
   }
 }
-

@@ -7,51 +7,52 @@ const JWT_SECRET = process.env.JWT_SECRET as string
 
 export async function GET(req: NextRequest) {
   try {
-
+    // Extract session token from cookies
     const session = req.cookies.get("session")?.value
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-
-    let decoded
+    // Verify JWT session
+    let decoded: { userId: string }
     try {
       decoded = jwt.verify(session, JWT_SECRET) as { userId: string }
-    } catch (err) {
-      return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 })
+    } catch {
+      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 })
     }
 
-  
+    // Get transaction ID from URL
     const url = new URL(req.url)
-    const segments = url.pathname.split("/")
-    const txId = segments[segments.length - 2] 
+    const idMatch = url.pathname.match(/\/transactions\/([^\/]+)\/?$/)
+    const txId = idMatch?.[1]
 
     if (!txId) {
       return NextResponse.json({ error: "Invalid transaction ID" }, { status: 400 })
     }
 
     // Fetch transaction
-    const tx = await prisma.transaction.findFirst({
+    const transaction = await prisma.transaction.findFirst({
       where: {
         id: txId,
         userId: decoded.userId,
       },
     })
 
-    if (!tx) {
+    if (!transaction) {
       return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
     }
 
-    const html = generateReceiptHTML(tx)
+    // Generate receipt HTML
+    const html = generateReceiptHTML(transaction)
 
     return new NextResponse(html, {
       headers: {
         "Content-Type": "text/html",
-        "Content-Disposition": `attachment; filename=receipt-${tx.id}.html`,
+        "Content-Disposition": `attachment; filename=receipt-${transaction.id}.html`,
       },
     })
-  } catch (error) {
-    console.error("Receipt generation failed:", error)
+  } catch (err) {
+    console.error("Error generating receipt:", err)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
 }

@@ -139,7 +139,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Earn more with our competitive rates on savings accounts.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -153,7 +153,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Lock in great rates with our certificate accounts.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -170,7 +170,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Drive away with competitive rates on auto loans.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -187,7 +187,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Tap into your home's equity with competitive rates.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -201,7 +201,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Earn cash back on every purchase with no annual fee.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -218,7 +218,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Flexible financing for life's opportunities.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -235,7 +235,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Find your perfect home loan with great rates.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -249,7 +249,7 @@ export default function Page() {
                   <p className="text-gray-600 mb-4">Premium checking with rewards and no fees.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
                     <Link href="/u/login">
-                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                      Learn More
                     </Link>
                   </Button>
                 </div>
@@ -326,7 +326,7 @@ export default function Page() {
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
                   <Link href="/u/login">
-                     Explore Options <ChevronRight className="ml-1 h-4 w-4" />
+                     Explore Options
                   </Link>
                 </Button>
               </div>
@@ -343,7 +343,7 @@ export default function Page() {
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
                   <Link href="/u/login">
-                    Get Started <ChevronRight className="ml-1 h-4 w-4" />
+                    Get Started
                   </Link>
                 </Button>
               </div>
@@ -365,7 +365,7 @@ export default function Page() {
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
                   <Link href="/u/login">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    Learn More
                   </Link>
                 </Button>
               </div>
@@ -711,7 +711,7 @@ export default function Page() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center">Community Commitment</h2>
           <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            At Horizon Banking, we're committed to making a positive impact in the communities we serve through
+            At Silver Crest Banking, we're committed to making a positive impact in the communities we serve through
             volunteerism, financial education, and charitable giving.
           </p>
 
@@ -771,7 +771,7 @@ export default function Page() {
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
               <Link href="/u/signup">
-              Open an Account <ChevronRight className="ml-1 h-4 w-4" />
+              Open an Account
               </Link>
             </Button>
             <Button
@@ -780,7 +780,7 @@ export default function Page() {
               className="bg-transparent border-white text-white hover:bg-green-800 font-medium"
             >
               <Link href="/contact#sendmsg">
-                Schedule Appointment <ChevronRight className="ml-1 h-4 w-4" />
+                Schedule Appointment 
               </Link>
             </Button>
           </div>

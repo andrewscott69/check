@@ -115,7 +115,7 @@ export default function LoginPage() {
               <Input
                 id="id"
                 type="text"
-                placeholder="SC-123AB"
+                placeholder="SC-XXXXX"
                 {...register("id")}
                 className={errors.id ? "border-red-500" : ""}
               />

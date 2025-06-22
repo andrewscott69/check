@@ -138,7 +138,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">High-Yield Savings</h3>
                   <p className="text-gray-600 mb-4">Earn more with our competitive rates on savings accounts.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -150,7 +152,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Certificate Accounts</h3>
                   <p className="text-gray-600 mb-4">Lock in great rates with our certificate accounts.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -165,7 +169,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Auto Loans</h3>
                   <p className="text-gray-600 mb-4">Drive away with competitive rates on auto loans.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -180,7 +186,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Home Equity</h3>
                   <p className="text-gray-600 mb-4">Tap into your home's equity with competitive rates.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -192,7 +200,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Rewards Credit Card</h3>
                   <p className="text-gray-600 mb-4">Earn cash back on every purchase with no annual fee.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -207,7 +217,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Personal Loans</h3>
                   <p className="text-gray-600 mb-4">Flexible financing for life's opportunities.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -222,7 +234,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Mortgages</h3>
                   <p className="text-gray-600 mb-4">Find your perfect home loan with great rates.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -234,7 +248,9 @@ export default function Page() {
                   <h3 className="text-lg font-medium mb-2">Ultimate Growth Checking</h3>
                   <p className="text-gray-600 mb-4">Premium checking with rewards and no fees.</p>
                   <Button variant="link" className="text-green-700 p-0 font-medium">
-                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link href="/u/login">
+                      Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -300,7 +316,9 @@ export default function Page() {
                   Our checking accounts are designed to fit your lifestyle with no hidden fees and great benefits.
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
-                  Explore Options <ChevronRight className="ml-1 h-4 w-4" />
+                  <Link href="/u/login">
+                     Explore Options <ChevronRight className="ml-1 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -315,7 +333,9 @@ export default function Page() {
                   Find the perfect mortgage solution with competitive rates and flexible terms.
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
-                  Get Started <ChevronRight className="ml-1 h-4 w-4" />
+                  <Link href="/u/login">
+                    Get Started <ChevronRight className="ml-1 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -335,7 +355,9 @@ export default function Page() {
                   Expert guidance to help you build, manage, and preserve your wealth for the future.
                 </p>
                 <Button variant="link" className="text-green-700 p-0 font-medium">
-                  Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                  <Link href="/u/login">
+                    Learn More <ChevronRight className="ml-1 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -382,9 +404,15 @@ export default function Page() {
                 </li>
               </ul>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-green-700 hover:bg-green-800">Enroll Now</Button>
+                <Button className="bg-green-700 hover:bg-green-800">
+                  <Link href="/u/login">
+                    Enroll Now
+                  </Link>  
+                </Button>
                 <Button variant="outline" className="border-green-700 text-green-700 hover:bg-green-50">
-                  Learn More
+                  <Link href="/u/login">
+                    Learn More
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -428,7 +456,11 @@ export default function Page() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="bg-yellow-500 hover:bg-yellow-600 w-full">Apply Now</Button>
+                <Button className="bg-yellow-500 hover:bg-yellow-600 w-full">
+                  <Link href="/u/login">
+                    Apply Now
+                  </Link>
+                </Button>
               </CardFooter>
             </Card>
 
@@ -462,7 +494,11 @@ export default function Page() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="bg-green-600 hover:bg-green-700 w-full">Learn More</Button>
+                <Button className="bg-green-600 hover:bg-green-700 w-full">
+                  <Link href="/u/login">
+                    Learn More
+                  </Link>  
+                </Button>
               </CardFooter>
             </Card>
           </div>
@@ -535,7 +571,7 @@ export default function Page() {
       </section>
 
       {/* Financial Education Section */}
-      <section className="py-16 bg-white">
+{/*       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center">Financial Education Resources</h2>
           <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
@@ -659,7 +695,7 @@ export default function Page() {
             </Card>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Community Involvement */}
       <section className="py-16 bg-green-50">
@@ -709,7 +745,7 @@ export default function Page() {
                   </div>
                 </li>
               </ul>
-              <Button className="bg-green-700 hover:bg-green-800">Learn About Our Impact</Button>
+              <Button className="bg-green-700 hover:bg-green-800"><Link href="/u/login">Learn About Our Impact</Link></Button>
             </div>
           </div>
         </div>
@@ -725,14 +761,18 @@ export default function Page() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+              <Link href="/u/signup">
               Open an Account <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="bg-transparent border-white text-white hover:bg-green-800 font-medium"
             >
-              Schedule Appointment <ChevronRight className="ml-1 h-4 w-4" />
+              <Link href="/u/contact#sendmsg">
+                Schedule Appointment <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>

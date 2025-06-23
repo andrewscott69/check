@@ -303,7 +303,7 @@ export default function PersonalInfoStep({ data, onNext, onPrev, isLoading }: Si
             Back
           </Button>
         )}
-        <Button onClick={handleNext} className="ml-auto">
+        <Button onClick={handleNext} className="ml-auto bg-amber-500">
           Continue
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>

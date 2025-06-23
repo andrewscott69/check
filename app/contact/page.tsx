@@ -1,3 +1,5 @@
+import { FormEvent, useCallback } from "react"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, MapPin, Clock, ChevronRight } from "lucide-react"
@@ -16,7 +18,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { useCallback } from "react"
+
 
 type Branch = {
   title: string
@@ -121,7 +123,8 @@ function BranchCard({ branch }: { branch: Branch }) {
 }
 
 export default function ContactPage() {
-  const handleSubmit = useCallback((e) => {
+const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+
     e.preventDefault()
     const formData = new FormData(e.target)
     const data = Object.fromEntries(formData.entries())

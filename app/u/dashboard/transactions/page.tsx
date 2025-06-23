@@ -1,96 +1,110 @@
-"use client"
 
-import { useState, useEffect } from 'react'
+"use client";
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { RecentTransactions } from '@/components/transactions'
-
-enum BankAccountType {
-  CHECKING = "CHECKING",
-  SAVINGS = "SAVINGS",
-  BUSINESS_CHECKING = "BUSINESS_CHECKING",
-  BUSINESS_SAVINGS = "BUSINESS_SAVINGS",
-  MONEY_MARKET = "MONEY_MARKET",
-  CERTIFICATE_OF_DEPOSIT = "CERTIFICATE_OF_DEPOSIT",
-}
-
-enum BankAccountStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  SUSPENDED = "SUSPENDED",
-  CLOSED = "CLOSED",
-  PENDING_APPROVAL = "PENDING_APPROVAL",
-}
-
-interface BankAccount {
+import { RecentTransactions } from "@/components/transactions";
+import Link from "next/link";
+import { UserNav } from "@/components/user-nav";
+import { Button } from "@/components/ui/button";
+import { MobileNav } from "@/components/mobile-nav";
+import Image from "next/image";
+interface Transaction {
   id: string;
-  accountNumber: string;
-  routingNumber: string;
-  accountType: BankAccountType;
-  accountName: string;
-  balance: number;
-  availableBalance: number;
-  status: BankAccountStatus;
+  type: string;
+  amount: number;
+  fee: number;
+  status: string;
   currencyType: string;
-  interestRate: number;
-  overdraftLimit: number;
-  hasOverdraftProtection: boolean;
-  minimumBalance: number;
-  openedAt: string;
-}
-
-interface DashboardData {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  transactions: any[];
-  bankAccounts: BankAccount[];
+  accountName: string;
+  description?: string;
+  createdAt: string;
+  reference?: string;
+  recipientName?: string;
+  recipientBank?: string;
 }
 
 const TransactionsPage = () => {
-  const [userData, setUserData] = useState<DashboardData | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchDashboard = async () => {
+    const fetchTransactions = async () => {
+      setLoading(true);
       try {
-        const res = await fetch("/api/dashboard", {
-          credentials: "include",
-        });
+        const res = await fetch(`/api/transactions?page=${currentPage}`);
 
         if (res.status === 401) {
           router.push("/u/login");
           return;
         }
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch dashboard data");
-        }
+        if (!res.ok) throw new Error("Failed to fetch transactions");
 
         const data = await res.json();
-        setUserData(data);
-
-        if (data.bankAccounts && data.bankAccounts.length > 0) {
-          setSelectedAccount(data.bankAccounts[0].id);
-        }
-      } catch (error) {
-        console.error("Error loading dashboard:", error);
-        setError("Failed to load dashboard data");
+        setTransactions(data.transactions);
+        setTotalPages(data.totalPages);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDashboard();
-  }, [router]);
+    fetchTransactions();
+  }, [currentPage, router]);
 
-  if (loading) return <p className="text-center p-4">Loading...</p>
-  if (error) return <p className="text-center text-red-500 p-4">{error}</p>
+  if (loading) return <p className="p-4 text-center">Loading...</p>;
 
-  return <RecentTransactions  />
-}
+  return (
+  
+      <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
+          <nav className="hidden md:flex  items-center justify-center gap-4">
+            <Link
+              href="/u/dashboard"
+              className="flex items-center justify-center"
+            >
+              <Image
+                src="/Silver-Crest-BW.png"
+                alt="Silver Crest Logo"
+                width={80}
+                height={80}
+              />
+            </Link>
+            <Link
+              href="/u/dashboard"
+              className="text-sm font-medium text-white"
+            >
+              Dashboard
+            </Link>
+          </nav>
 
-export default TransactionsPage
+          <MobileNav />
+          <div className="ml-auto flex items-center gap-4">
+            
+
+            <UserNav />
+          </div>
+        </header>
+        <main className="flex-1 bg-slate-50 p-4 md:p-8">
+         
+    <RecentTransactions
+      transactions={transactions}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={(page) => setCurrentPage(page)}
+    />
+  
+    </main>
+    </div>
+  
+  );
+};
+
+export default TransactionsPage;
+
+

@@ -170,7 +170,7 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
           <button
             type="button"
             className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
-              accountCategory === "personal" ? "bg-blue-600 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+              accountCategory === "personal" ? "bg-amber-500 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
             } border border-gray-200`}
             onClick={() => setAccountCategory("personal")}
           >
@@ -179,7 +179,7 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
           <button
             type="button"
             className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
-              accountCategory === "business" ? "bg-blue-600 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+              accountCategory === "business" ? "bg-amber-500 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
             } border border-gray-200`}
             onClick={() => setAccountCategory("business")}
           >
@@ -198,8 +198,8 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
               onClick={() => setSelectedAccountType(account.id)}
               className={`cursor-pointer border transition-all ${
                 isSelected
-                  ? "border-green-500 ring-2 ring-green-400 bg-green-50"
-                  : "hover:border-green-400"
+                  ? "border-amber-500 ring-2 ring-amber-400 bg-amber-50"
+                  : "hover:border-amber-400"
               }`}
             >
               <CardHeader className="pb-2">
@@ -208,7 +208,7 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
                     {account.icon}
                     <CardTitle className="text-lg">{account.title}</CardTitle>
                   </div>
-                  <div className="text-xs font-medium px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+                  <div className="text-xs font-medium px-2 py-1 rounded-full bg-amber-100 text-amber-600">
                     {account.interestRate}% APY
                   </div>
                 </div>
@@ -218,7 +218,7 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
                 <ul className="space-y-1 text-sm">
                   {account.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-600" />
+                      <Check className="h-4 w-4 text-amber-00" />
                       <span className="text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -240,7 +240,7 @@ export default function AccountTypeStep({ data, onNext, onPrev, isLoading }: Sig
             Back
           </Button>
         )}
-        <Button onClick={handleNext} disabled={!selectedAccountType} className="ml-auto">
+        <Button onClick={handleNext} disabled={!selectedAccountType} className="ml-auto bg-amber-500">
           Continue
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>

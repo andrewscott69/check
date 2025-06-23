@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight, Shield, Clock, Users } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
 // import type { SignupData } from "@/app/u/signup/page"
 import type { SignupStepProps } from "@/types/SignupStepProps"
 
@@ -31,7 +30,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
         <div className="space-y-6">
           <div className="grid gap-4">
             <div className="flex items-start space-x-4">
-              <Shield className="w-8 h-8 text-blue-600 mt-1" />
+              <Shield className="w-8 h-8 text-amber-500 mt-1" />
               <div>
                 <h3 className="font-semibold text-gray-900">Bank-Level Security</h3>
                 <p className="text-gray-600 text-sm">
@@ -40,7 +39,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <Clock className="w-8 h-8 text-blue-600 mt-1" />
+              <Clock className="w-8 h-8 text-amber-500 mt-1" />
               <div>
                 <h3 className="font-semibold text-gray-900">Quick Setup</h3>
                 <p className="text-gray-600 text-sm">
@@ -49,7 +48,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <Users className="w-8 h-8 text-blue-600 mt-1" />
+              <Users className="w-8 h-8 text-amber-500 mt-1" />
               <div>
                 <h3 className="font-semibold text-gray-900">Trusted by Millions</h3>
                 <p className="text-gray-600 text-sm">
@@ -78,7 +77,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
         {/* Image First on Mobile */}
         <div className="flex justify-center">
           <Image
-            src="/accountopening.png?height=400&width=400"
+            src="/signup-bg.jpg?height=400&width=400"
             alt="Secure banking illustration"
             width={400}
             height={400}
@@ -88,19 +87,10 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
       </div>
 
       <div className="text-center">
-        <div className="flex justify-center gap-4">
-          <Link href="/" passHref>
-            <Button asChild size="lg" variant="outline" className="px-8 py-4 text-lg">
-              <a>Go Home</a>
-            </Button>
-          </Link>
-          
-          <Button onClick={handleGetStarted} size="lg" className="px-8 py-4 text-lg">
-            Get Started
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>          
-        </div>
-      
+        <Button onClick={handleGetStarted} size="lg" className="px-8 bg-amber-500 py-4 text-lg">
+          Get Started
+          <ArrowRight className="ml-2 w-5 h-5" />
+        </Button>
         <p className="text-xs text-gray-500 mt-4">
           By continuing, you agree to our Terms of Service and Privacy Policy
         </p>

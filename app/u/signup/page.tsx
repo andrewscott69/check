@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
-import Image from "next/image"
-import logo from "@/public/Crest icon.png" // 
 import {
   Home,
   UserPlus,
@@ -20,6 +18,8 @@ import AccountTypeStep from "@/components/signup/account-type-step"
 import AddressStep from "@/components/signup/address-step"
 import PersonalInfoStep from "@/components/signup/personal-info-step"
 import ReviewStep from "@/components/signup/review-step"
+import Image from "next/image"
+import Link from "next/link";
 
 
 import { toast } from "sonner" 
@@ -126,7 +126,7 @@ export default function SignupProcess() {
       sessionStorage.setItem("verificationEmail", completeData.email!)
       sessionStorage.setItem("verificationStatus", "signup") 
 
-      toast.success("Account created successfully! Please verify your email.") 
+      toast.success("Account created successfully! Please verify your Account.") 
 
       router.push("/u/verify-otp")
     } catch (err: any) {
@@ -148,10 +148,13 @@ export default function SignupProcess() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Instant Account Opening</h1>
           <div className="flex justify-end">
-            <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
-              <Image src={logo} alt="Silver Crest Bank Logo" width={30} height={30} />
-              Silver Crest Bank
-            </div>
+          <Link
+        href="/"
+        className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900"
+      >
+        <Image src="/Silver-Crest.png" alt="Silver Crest Logo" width={100} height={100} />
+        
+      </Link>
           </div>
         </div>
 
@@ -180,7 +183,7 @@ export default function SignupProcess() {
                   tabIndex={isCurrent ? 0 : -1}
                   className={`flex flex-col items-center p-2 rounded-lg transition-colors min-w-[3rem]
                     ${isCurrent
-                      ? "text-blue-600 bg-blue-50"
+                      ? "text-amber-500 bg-blue-50"
                       : isCompleted
                       ? "text-green-600 hover:bg-green-50"
                       : "text-gray-400 cursor-not-allowed"}`}

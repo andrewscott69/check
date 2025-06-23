@@ -25,9 +25,11 @@ export default function OnlineBankingPage() {
               Bank anywhere, anytime with our award-winning digital banking platform. Manage your accounts, pay bills,
               and deposit checks from your computer or mobile device.
             </p>
+            <Link href="/u/signup">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
               Enroll Now <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
+              </Link>
           </div>
         </div>
       </section>
@@ -99,7 +101,7 @@ export default function OnlineBankingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="relative h-[500px]">
                   <Image
-                    src="/placeholder.svg?height=500&width=300"
+                    src="/mobileb.jpg?height=500&width=300"
                     alt="Mobile Banking App"
                     fill
                     className="object-contain"
@@ -196,7 +198,7 @@ export default function OnlineBankingPage() {
                 </div>
                 <div className="relative h-[400px]">
                   <Image
-                    src="/placeholder.svg?height=400&width=600"
+                    src="/onlineb.jpg?height=400&width=600"
                     alt="Online Banking Dashboard"
                     fill
                     className="object-contain"
@@ -209,7 +211,7 @@ export default function OnlineBankingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="relative h-[400px]">
                   <Image
-                    src="/placeholder.svg?height=400&width=500"
+                    src="/Tablet Banking.jpg?height=400&width=500"
                     alt="Tablet Banking"
                     fill
                     className="object-contain"

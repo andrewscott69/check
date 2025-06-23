@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { ArrowDown, ArrowUp, ArrowLeftRight, MoreHorizontal } from "lucide-react"
-import { format } from "date-fns"
+import Link from "next/link";
+import { useState } from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowLeftRight,
+  MoreHorizontal,
+} from "lucide-react";
+import { format } from "date-fns";
+import jsPDF from "jspdf";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +19,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 export enum TransactionType {
   DEPOSIT = "DEPOSIT",
@@ -39,182 +53,233 @@ export enum CurrencyType {
   ETH = "ETH",
 }
 
-interface Transaction {
-  id: string
-  userId: string
-  cardId?: string | null
-  type: TransactionType
-  amount: number
-  fee: number
-  status: TransactionStatus
-  currencyType: CurrencyType
-  accountName: string
-  description?: string | null
-  txHash?: string | null
-  createdAt: string | Date
-  updatedAt: string | Date
+export interface Transaction {
+  id: string;
+  userId: string;
+  cardId?: string | null;
+  type: TransactionType;
+  amount: number;
+  fee: number;
+  status: TransactionStatus;
+  currencyType: CurrencyType;
+  accountName: string;
+  description?: string | null;
+  txHash?: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 interface RecentTransactionsProps {
-  transactions?: Transaction[]
+  transactions?: Transaction[];
 }
 
-export function RecentTransactions({ transactions = [] }: RecentTransactionsProps) {
-  
-  if (transactions.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="rounded-full bg-muted p-3 mb-4">
-          <svg
-            className="h-6 w-6 text-muted-foreground"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M12 2v20m9-9H3" />
-          </svg>
-        </div>
-        <h3 className="font-semibold text-sm mb-1">No transactions yet</h3>
-        <p className="text-xs text-muted-foreground">Your recent transactions will appear here</p>
-      </div>
-    )
-  }
+export function RecentTransactions({
+  transactions = [],
+}: RecentTransactionsProps) {
+  const [openTransaction, setOpenTransaction] = useState<Transaction | null>(
+    null
+  );
+
+ 
+
+  const generateReceiptPDF = (transaction: Transaction) => {
+  const doc = new jsPDF();
+
+  // Add bank logo - must be in public directory
+  const logoImg = new Image();
+  logoImg.src = "/Silver-Crest.png";
+  logoImg.onload = () => {
+    doc.addImage(logoImg, "PNG", 85, 10, 40, 20);
+
+    doc.setFontSize(18);
+    doc.text("Silver Crest Bank", 105, 35, { align: "center" });
+    doc.setFontSize(12);
+    doc.text("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland", 105, 42, { align: "center" });
+    doc.text("support@silvercrest.com | ++41 32 466 78 90", 105, 48, {
+      align: "center",
+    });
+
+    doc.setLineWidth(0.5);
+    doc.line(20, 54, 190, 54);
+
+    doc.setFontSize(16);
+    doc.text("Transaction Receipt", 105, 64, { align: "center" });
+
+    const details = [
+      ["Transaction ID:", transaction.id],
+      ["Type:", transaction.type],
+      ["Status:", transaction.status],
+      ["Amount:", `$${transaction.amount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+      })}`],
+      ["Currency:", transaction.currencyType],
+      ["Fee:", `$${transaction.fee.toFixed(2)}`],
+      ["Account Name:", transaction.accountName],
+      ["Date:", new Date(transaction.createdAt).toLocaleString()],
+      ["Description:", transaction.description || "N/A"],
+    ];
+
+    let y = 80;
+    doc.setFontSize(12);
+    details.forEach(([label, value]) => {
+      doc.text(`${label}`, 30, y);
+      doc.text(`${value}`, 90, y);
+      y += 10;
+    });
+
+    // Footer / Disclaimer
+    doc.setLineWidth(0.1);
+    doc.line(20, y + 10, 190, y + 10);
+    doc.setFontSize(10);
+    doc.text(
+      "This receipt is computer-generated and does not require a signature.",
+      105,
+      y + 20,
+      { align: "center" }
+    );
+
+    doc.save(`Transaction-${transaction.id}.pdf`);
+  };
+
+  // If the logo fails to load, fallback
+  logoImg.onerror = () => {
+    doc.setFontSize(18);
+    doc.text("FirstTrust National Bank", 105, 20, { align: "center" });
+    doc.setFontSize(12);
+    doc.text("123 Finance Ave, Lagos, Nigeria", 105, 28, { align: "center" });
+    doc.text("support@firsttrustbank.com | +234 700 000 0000", 105, 34, {
+      align: "center",
+    });
+    doc.save(`Transaction-${transaction.id}.pdf`);
+  };
+}
+
+
+ 
 
   const getTransactionIcon = (type: TransactionType) => {
     switch (type) {
       case TransactionType.DEPOSIT:
       case TransactionType.REFUND:
-        return <ArrowDown className="h-5 w-5 text-emerald-600" />
+        return <ArrowDown className="h-5 w-5 text-emerald-600" />;
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
-        return <ArrowUp className="h-5 w-5 text-rose-600" />
+        return <ArrowUp className="h-5 w-5 text-rose-600" />;
       case TransactionType.TRANSFER:
-        return <ArrowLeftRight className="h-5 w-5 text-red-600" />
+        return <ArrowLeftRight className="h-5 w-5 text-red-600" />;
       default:
-        return <ArrowDown className="h-5 w-5 text-gray-600" />
+        return <ArrowDown className="h-5 w-5 text-gray-600" />;
     }
-  }
+  };
 
   const getTransactionIconBg = (type: TransactionType) => {
     switch (type) {
       case TransactionType.DEPOSIT:
       case TransactionType.REFUND:
-        return "bg-emerald-100"
+        return "bg-emerald-100";
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
-        return "bg-rose-100"
       case TransactionType.TRANSFER:
-        return "bg-rose-100"
+        return "bg-rose-100";
       default:
-        return "bg-gray-100"
+        return "bg-gray-100";
     }
-  }
+  };
 
   const getTransactionAmountColor = (type: TransactionType) => {
     switch (type) {
       case TransactionType.DEPOSIT:
       case TransactionType.REFUND:
-        return "text-emerald-600"
+        return "text-emerald-600";
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
-        return "text-rose-600"
       case TransactionType.TRANSFER:
-        return "text-rose-600"
+        return "text-rose-600";
       default:
-        return "text-gray-600"
+        return "text-gray-600";
     }
-  }
+  };
 
   const getTransactionAmountPrefix = (type: TransactionType) => {
     switch (type) {
       case TransactionType.DEPOSIT:
       case TransactionType.REFUND:
-        return "+"
+        return "+";
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
       case TransactionType.TRANSFER:
-        return "-"
+        return "-";
       default:
-        return ""
+        return "";
     }
-  }
-
-  const formatAmount = (amount: number, type: TransactionType, currencyType: CurrencyType) => {
-    const prefix = getTransactionAmountPrefix(type)
-    const currencySymbol = getCurrencySymbol(currencyType)
-    return `${prefix}${currencySymbol}${Math.abs(amount).toFixed(2)}`
-  }
+  };
 
   const getCurrencySymbol = (currencyType: CurrencyType) => {
     switch (currencyType) {
       case CurrencyType.USD:
-        return "$"
+        return "$";
       case CurrencyType.EUR:
-        return "€"
+        return "€";
       case CurrencyType.GBP:
-        return "£"
+        return "£";
       case CurrencyType.BTC:
-        return "₿"
+        return "₿";
       case CurrencyType.ETH:
-        return "Ξ"
+        return "Ξ";
       default:
-        return "$"
+        return "$";
     }
-  }
+  };
 
   const formatDate = (date: string | Date) => {
-    const transactionDate = new Date(date)
-    const today = new Date()
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
+    const transactionDate = new Date(date);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
 
     if (transactionDate.toDateString() === today.toDateString()) {
-      return `Today, ${format(transactionDate, "h:mm a")}`
+      return `Today, ${format(transactionDate, "h:mm a")}`;
     } else if (transactionDate.toDateString() === yesterday.toDateString()) {
-      return `Yesterday, ${format(transactionDate, "h:mm a")}`
+      return `Yesterday, ${format(transactionDate, "h:mm a")}`;
     } else {
-      return format(transactionDate, "MMM d, yyyy")
+      return format(transactionDate, "MMM d, yyyy");
     }
-  }
+  };
 
   const getStatusBadge = (status: TransactionStatus) => {
     switch (status) {
       case TransactionStatus.COMPLETED:
-        return <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200">Completed</Badge>
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+            Completed
+          </Badge>
+        );
       case TransactionStatus.PENDING:
         return (
           <Badge variant="outline" className="text-amber-600 border-amber-300">
             Pending
           </Badge>
-        )
+        );
       case TransactionStatus.FAILED:
-        return <Badge variant="destructive">Failed</Badge>
+        return <Badge variant="destructive">Failed</Badge>;
       case TransactionStatus.CANCELLED:
-        return <Badge variant="secondary">Cancelled</Badge>
+        return <Badge variant="secondary">Cancelled</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <Badge variant="outline">{status}</Badge>;
     }
-  }
+  };
 
   return (
     <div className="space-y-4">
       {transactions.slice(0, 5).map((transaction) => (
         <div key={transaction.id} className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div
-              className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(transaction.type)}`}
-            >
+            <div className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(transaction.type)}`}>
               {getTransactionIcon(transaction.type)}
             </div>
             <div>
               <div className="font-medium">
-                {transaction.description || `${transaction.type.charAt(0) + transaction.type.slice(1).toLowerCase()}`}
+                {transaction.description || `${transaction.type.charAt(0)}${transaction.type.slice(1).toLowerCase()}`}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">{formatDate(transaction.createdAt)}</span>
@@ -224,42 +289,62 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
           </div>
           <div className="flex items-center gap-4">
             <div className={`text-sm font-medium ${getTransactionAmountColor(transaction.type)}`}>
-              {formatAmount(transaction.amount, transaction.type, transaction.currencyType)}
+              {`${getTransactionAmountPrefix(transaction.type)}${getCurrencySymbol(transaction.currencyType)}${Math.abs(transaction.amount).toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">More options</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={`/u/transactions/${transaction.id}`}>View Details</Link>
+                <DropdownMenuItem onClick={() => setOpenTransaction(transaction)}>
+                  View Details
                 </DropdownMenuItem>
-                <DropdownMenuItem>Download Receipt</DropdownMenuItem>
-                {transaction.status === TransactionStatus.PENDING && (
-                  <DropdownMenuItem className="text-red-600">Cancel Transaction</DropdownMenuItem>
-                )}
-                {transaction.txHash && (
-                  <DropdownMenuItem asChild>
-                    <Link href={`https://etherscan.io/tx/${transaction.txHash}`} target="_blank">
-                      View on Blockchain
-                    </Link>
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem onClick={() => generateReceiptPDF(transaction)}>
+                  Download Receipt
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       ))}
+
+      <Dialog
+        open={!!openTransaction}
+        onOpenChange={(open) => !open && setOpenTransaction(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Transaction Details</DialogTitle>
+            <DialogDescription>
+              Full information about this transaction.
+            </DialogDescription>
+          </DialogHeader>
+          {openTransaction && (
+            <div className="space-y-2 text-sm">
+              <p><strong>ID:</strong> {openTransaction.id}</p>
+              <p><strong>Amount:</strong> ${openTransaction.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}</p>
+              <p><strong>Status:</strong> {openTransaction.status}</p>
+              <p><strong>Type:</strong> {openTransaction.type}</p>
+              <p><strong>Date:</strong> {new Date(openTransaction.createdAt).toLocaleString()}</p>
+              <p><strong>Account:</strong> {openTransaction.accountName}</p>
+              {openTransaction.description && <p><strong>Description:</strong> {openTransaction.description}</p>}
+            </div>
+          )}
+          <DialogClose asChild>
+            <Button className="mt-4 w-full">Close</Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex justify-center">
         <Button variant="outline" asChild>
           <Link href="/u/dashboard/transactions">View All Transactions</Link>
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,95 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Phone, Mail, MapPin, Clock, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+const branches = [
+  {
+    title: "Swiss Private Office",
+    description: "Prestige branch in the heart of Porrentruy",
+    address: "Avenue de la Liberté 25",
+    location: "2900 Porrentruy, Switzerland",
+    phone: "+41 32 466 78 90",
+    hours: ["Mon-Fri: 8:30 AM - 4:30 PM"],
+    mapsQuery: "Avenue de la Liberté 25, 2900 Porrentruy, Switzerland",
+  },
+  {
+    title: "Mediterranean Service Hub",
+    description: "Full-service location in sunny Zabbar",
+    address: "67, St. James Street",
+    location: "Zabbar ZBR 1401, Malta",
+    phone: "+356 21 234 567",
+    hours: ["Mon-Fri: 9:00 AM - 5:00 PM", "Sat: 9:00 AM - 12:00 PM"],
+    mapsQuery: "67, St. James Street, Zabbar ZBR 1401, Malta",
+  },
+  {
+    title: "Gulf Corporate Branch",
+    description: "Free zone access and private banking support",
+    address: "Al Faseel, Fujairah Free Zone",
+    location: "P.O. Box 4425, Fujairah, UAE",
+    phone: "+971 9 222 3344",
+    hours: ["Sun-Thu: 8:00 AM - 2:00 PM"],
+    mapsQuery: "Al Faseel, Fujairah Free Zone, Fujairah, UAE",
+  },
+  {
+    title: "UK Correspondence Office",
+    description: "For mail handling and administrative inquiries",
+    address: "P.O. Box 174",
+    location: "Leeds LS1 1EL, United Kingdom",
+    phone: "+44 113 123 4567",
+    hours: ["Mon-Fri: 9:00 AM - 5:00 PM"],
+    mapsQuery: "P.O. Box 174, Leeds LS1 1EL, United Kingdom",
+  },
+];
+
+function BranchCard({ branch }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{branch.title}</CardTitle>
+        <CardDescription>{branch.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">{branch.address}</p>
+              <p className="text-gray-600">{branch.location}</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>{branch.phone}</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              {branch.hours.map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.mapsQuery)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
+  );
+}
+
 
 export default function ContactPage() {
   return (
@@ -11,7 +98,7 @@ export default function ContactPage() {
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/placeholder.svg?height=400&width=1920"
+            src="/contactus.png"
             alt="Contact Us"
             fill
             className="object-cover opacity-40 mix-blend-overlay"
@@ -62,7 +149,7 @@ export default function ContactPage() {
                 <CardDescription>We'll respond within 24 hours</CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-lg font-medium text-green-700 mb-4">support@horizonbanking.com</p>
+                <p className="text-lg font-medium text-green-700 mb-4">support@silvercrest.com</p>
                 <p className="text-gray-600">
                   For general inquiries, account questions, or technical support. Please include your account number for
                   faster service.
@@ -79,8 +166,8 @@ export default function ContactPage() {
                 <CardDescription>Over 50 locations to serve you</CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-gray-600 mb-4">Find a branch or ATM near you using our branch locator tool.</p>
-                <Button className="bg-green-700 hover:bg-green-800 w-full">Find Locations</Button>
+                <p className="text-gray-600 mb-4">Need to vist our physical location, choose the location nearest to you.</p>
+{/*                 <Button className="bg-green-700 hover:bg-green-800 w-full">Find Locations</Button> */}
               </CardContent>
             </Card>
           </div>
@@ -93,397 +180,45 @@ export default function ContactPage() {
           <h2 className="text-3xl font-bold mb-12 text-center">Branch Locations</h2>
 
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="w-full grid grid-cols-1 md:grid-cols-4 h-auto mb-8">
-              <TabsTrigger value="all" className="py-3 text-base">
-                All Locations
-              </TabsTrigger>
-              <TabsTrigger value="downtown" className="py-3 text-base">
-                Downtown
-              </TabsTrigger>
-              <TabsTrigger value="suburban" className="py-3 text-base">
-                Suburban
-              </TabsTrigger>
-              <TabsTrigger value="atm" className="py-3 text-base">
-                ATM Only
-              </TabsTrigger>
-            </TabsList>
+            <TabsList className="w-full grid grid-cols-1 md:grid-cols-5 h-auto mb-8">
+            <TabsTrigger value="all" className="py-3 text-base">All Locations</TabsTrigger>
+            <TabsTrigger value="switzerland" className="py-3 text-base">Switzerland 🇨🇭</TabsTrigger>
+            <TabsTrigger value="malta" className="py-3 text-base">Malta 🇲🇹</TabsTrigger>
+            <TabsTrigger value="uae" className="py-3 text-base">UAE 🇦🇪</TabsTrigger>
+            <TabsTrigger value="uk" className="py-3 text-base">UK 🇬🇧</TabsTrigger>
+          </TabsList>
 
             <TabsContent value="all">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Main Street Branch</CardTitle>
-                    <CardDescription>Full-service branch with drive-thru</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">123 Main Street</p>
-                          <p className="text-gray-600">Downtown, ST 12345</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 123-4567</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-                          <p>Sat: 9:00 AM - 1:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Westside Branch</CardTitle>
-                    <CardDescription>Full-service branch with business center</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">456 West Avenue</p>
-                          <p className="text-gray-600">Westside, ST 12346</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 234-5678</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 6:00 PM</p>
-                          <p>Sat: 9:00 AM - 2:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Northgate Branch</CardTitle>
-                    <CardDescription>Full-service branch with wealth management</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">789 North Gate Blvd</p>
-                          <p className="text-gray-600">Northgate, ST 12347</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 345-6789</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 8:30 AM - 5:30 PM</p>
-                          <p>Sat: 9:00 AM - 1:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Eastside Branch</CardTitle>
-                    <CardDescription>Full-service branch with mortgage center</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">321 East Park Drive</p>
-                          <p className="text-gray-600">Eastside, ST 12348</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 456-7890</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-                          <p>Sat: 9:00 AM - 12:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Southpoint Branch</CardTitle>
-                    <CardDescription>Full-service branch with safe deposit boxes</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">654 South Point Way</p>
-                          <p className="text-gray-600">Southpoint, ST 12349</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 567-8901</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-                          <p>Sat: 9:00 AM - 1:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>University Branch</CardTitle>
-                    <CardDescription>Student-focused services and extended hours</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">987 University Circle</p>
-                          <p className="text-gray-600">University District, ST 12350</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 678-9012</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Thu: 9:00 AM - 7:00 PM</p>
-                          <p>Fri: 9:00 AM - 6:00 PM</p>
-                          <p>Sat: 10:00 AM - 2:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
+                  {branches.map((branch, idx) => <BranchCard key={idx} branch={branch} />)}
               </div>
             </TabsContent>
 
-            <TabsContent value="downtown">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Main Street Branch</CardTitle>
-                    <CardDescription>Full-service branch with drive-thru</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">123 Main Street</p>
-                          <p className="text-gray-600">Downtown, ST 12345</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 123-4567</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-                          <p>Sat: 9:00 AM - 1:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            </TabsContent>
+            <TabsContent value="malta">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {branches.filter(b => b.country === "malta").map((branch, idx) => (
+        <BranchCard key={idx} branch={branch} />
+      ))}
+    </div>
+  </TabsContent>
 
-            <TabsContent value="suburban">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Westside Branch</CardTitle>
-                    <CardDescription>Full-service branch with business center</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">456 West Avenue</p>
-                          <p className="text-gray-600">Westside, ST 12346</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 234-5678</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 9:00 AM - 6:00 PM</p>
-                          <p>Sat: 9:00 AM - 2:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
+  {/* UAE */}
+  <TabsContent value="uae">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {branches.filter(b => b.country === "uae").map((branch, idx) => (
+        <BranchCard key={idx} branch={branch} />
+      ))}
+    </div>
+  </TabsContent>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Northgate Branch</CardTitle>
-                    <CardDescription>Full-service branch with wealth management</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">789 North Gate Blvd</p>
-                          <p className="text-gray-600">Northgate, ST 12347</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Phone className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>(555) 345-6789</p>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p>Mon-Fri: 8:30 AM - 5:30 PM</p>
-                          <p>Sat: 9:00 AM - 1:00 PM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="atm">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Shopping Center ATM</CardTitle>
-                    <CardDescription>24/7 access with deposit capability</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">555 Shopping Plaza</p>
-                          <p className="text-gray-600">Midtown, ST 12351</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>Available 24/7</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Airport ATM</CardTitle>
-                    <CardDescription>Convenient location for travelers</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <MapPin className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <div>
-                          <p className="font-medium">Regional Airport Terminal</p>
-                          <p className="text-gray-600">Airport District, ST 12352</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
-                        <Clock className="h-5 w-5 text-green-600 mr-2 shrink-0" />
-                        <p>Available 24/7</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      Get Directions
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            </TabsContent>
+  {/* UK */}
+  <TabsContent value="uk">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {branches.filter(b => b.country === "uk").map((branch, idx) => (
+        <BranchCard key={idx} branch={branch} />
+      ))}
+    </div>
+  </TabsContent>
           </Tabs>
         </div>
       </section>

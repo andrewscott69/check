@@ -5,6 +5,8 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, DollarSign, Loader2 } from "lucide-react"
+import Image from "next/image"
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -54,9 +56,12 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
-      <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-bold">
-        <DollarSign className="h-8 w-8 text-primary" />
-        <span>Silver Crest Bank</span>
+       <Link
+        href="/"
+        className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900"
+      >
+        <Image src="/Silver-Crest.png" alt="Silver Crest Logo" width={90} height={90} />
+        
       </Link>
 
       <Card className="mx-auto w-full max-w-md shadow-lg">

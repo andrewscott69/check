@@ -2,8 +2,31 @@ import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, MapPin, Clock, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import { useCallback } from "react"
+
+type Branch = {
+  title: string
+  description: string
+  address: string
+  location: string
+  phone: string
+  hours: string[]
+  mapsQuery: string
+}
 
 const branches = [
   {
@@ -14,6 +37,7 @@ const branches = [
     phone: "+41 32 466 78 90",
     hours: ["Mon-Fri: 8:30 AM - 4:30 PM"],
     mapsQuery: "Avenue de la Liberté 25, 2900 Porrentruy, Switzerland",
+    countryCode: "switzerland",
   },
   {
     title: "Mediterranean Service Hub",
@@ -23,6 +47,7 @@ const branches = [
     phone: "+356 21 234 567",
     hours: ["Mon-Fri: 9:00 AM - 5:00 PM", "Sat: 9:00 AM - 12:00 PM"],
     mapsQuery: "67, St. James Street, Zabbar ZBR 1401, Malta",
+    countryCode: "malta",
   },
   {
     title: "Gulf Corporate Branch",
@@ -32,6 +57,7 @@ const branches = [
     phone: "+971 9 222 3344",
     hours: ["Sun-Thu: 8:00 AM - 2:00 PM"],
     mapsQuery: "Al Faseel, Fujairah Free Zone, Fujairah, UAE",
+    countryCode: "uae",
   },
   {
     title: "UK Correspondence Office",
@@ -41,10 +67,12 @@ const branches = [
     phone: "+44 113 123 4567",
     hours: ["Mon-Fri: 9:00 AM - 5:00 PM"],
     mapsQuery: "P.O. Box 174, Leeds LS1 1EL, United Kingdom",
+    countryCode: "uk",
   },
-];
+]
 
-function BranchCard({ branch }) {
+
+function BranchCard({ branch }: { branch: Branch }) {
   return (
     <Card>
       <CardHeader>
@@ -76,7 +104,9 @@ function BranchCard({ branch }) {
       </CardContent>
       <CardFooter>
         <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.mapsQuery)}`}
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            branch.mapsQuery
+          )}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full"
@@ -87,14 +117,20 @@ function BranchCard({ branch }) {
         </Link>
       </CardFooter>
     </Card>
-  );
+  )
 }
 
-
 export default function ContactPage() {
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const data = Object.fromEntries(formData.entries())
+    console.log(data)
+    // Send to API or display success toast
+  }, [])
+
   return (
     <main className="min-h-screen flex flex-col">
-      {/* Hero Section */}
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
@@ -116,12 +152,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Information */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Get in Touch</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Customer Service */}
             <Card>
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -140,6 +175,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
+            {/* Email Support */}
             <Card>
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -157,6 +193,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
+            {/* Locations */}
             <Card>
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -166,8 +203,7 @@ export default function ContactPage() {
                 <CardDescription>Over 50 locations to serve you</CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-gray-600 mb-4">Need to vist our physical location, choose the location nearest to you.</p>
-{/*                 <Button className="bg-green-700 hover:bg-green-800 w-full">Find Locations</Button> */}
+                <p className="text-gray-600 mb-4">Need to visit our physical location? Choose the one nearest to you.</p>
               </CardContent>
             </Card>
           </div>
@@ -178,327 +214,24 @@ export default function ContactPage() {
       <section className="py-16 bg-gray-50" id="locations">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Branch Locations</h2>
-
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full grid grid-cols-1 md:grid-cols-5 h-auto mb-8">
-            <TabsTrigger value="all" className="py-3 text-base">All Locations</TabsTrigger>
-            <TabsTrigger value="switzerland" className="py-3 text-base">Switzerland 🇨🇭</TabsTrigger>
-            <TabsTrigger value="malta" className="py-3 text-base">Malta 🇲🇹</TabsTrigger>
-            <TabsTrigger value="uae" className="py-3 text-base">UAE 🇦🇪</TabsTrigger>
-            <TabsTrigger value="uk" className="py-3 text-base">UK 🇬🇧</TabsTrigger>
-          </TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="switzerland">Switzerland 🇨🇭</TabsTrigger>
+              <TabsTrigger value="malta">Malta 🇲🇹</TabsTrigger>
+              <TabsTrigger value="uae">UAE 🇦🇪</TabsTrigger>
+              <TabsTrigger value="uk">UK 🇬🇧</TabsTrigger>
+            </TabsList>
 
-            <TabsContent value="all">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                   <Card>
-      <CardHeader>
-        <CardTitle>Swiss Private Office</CardTitle>
-        <CardDescription>Prestige branch in the heart of Porrentruy</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">Avenue de la Liberté 25</p>
-              <p className="text-gray-600">2900 Porrentruy, Switzerland</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+41 32 466 78 90</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              
-                <p >Mon-Fri: 8:30 AM - 4:30 PM</p>
-             
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-                 <Card>
-      <CardHeader>
-        <CardTitle>Mediterranean Service Hub</CardTitle>
-        <CardDescription>Full-service location in sunny Zabbar</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">67, St. James Street</p>
-              <p className="text-gray-600">Zabbar ZBR 1401, Malta</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+356 21 234 567</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              
-                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-                <p>Sat: 9:00 AM - 12:00 PM</p>
-            
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("67, St. James Street, Zabbar ZBR 1401, Malta")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-
-     <Card>
-      <CardHeader>
-        <CardTitle>Gulf Corporate Branch</CardTitle>
-        <CardDescription>Free zone access and private banking support</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">Al Faseel, Fujairah Free Zone</p>
-              <p className="text-gray-600">P.O. Box 4425, Fujairah, UAE</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+971 9 222 3344</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              
-                <p>Sun-Thu: 8:00 AM - 2:00 PM</p>
-              
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Al Faseel, Fujairah Free Zone, Fujairah, UAE")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-
-     <Card>
-      <CardHeader>
-        <CardTitle>UK Correspondence Office</CardTitle>
-        <CardDescription>For mail handling and administrative inquiries</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">P.O. Box 174</p>
-              <p className="text-gray-600">Leeds LS1 1EL, United Kingdom</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+44 113 123 4567</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-             
-                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-             
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("P.O. Box 174, Leeds LS1 1EL, United Kingdom")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="malta">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Card>
-      <CardHeader>
-        <CardTitle>Swiss Private Office</CardTitle>
-        <CardDescription>Prestige branch in the heart of Porrentruy</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">Avenue de la Liberté 25</p>
-              <p className="text-gray-600">2900 Porrentruy, Switzerland</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+41 32 466 78 90</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              
-                <p >Mon-Fri: 8:30 AM - 4:30 PM</p>
-             
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-    </div>
-  </TabsContent>
-
-  {/* UAE */}
-  <TabsContent value="uae">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Card>
-      <CardHeader>
-        <CardTitle>Gulf Corporate Branch</CardTitle>
-        <CardDescription>Free zone access and private banking support</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">Al Faseel, Fujairah Free Zone</p>
-              <p className="text-gray-600">P.O. Box 4425, Fujairah, UAE</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+971 9 222 3344</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              
-                <p>Sun-Thu: 8:00 AM - 2:00 PM</p>
-              
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Al Faseel, Fujairah Free Zone, Fujairah, UAE")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-    </div>
-  </TabsContent>
-
-  {/* UK */}
-  <TabsContent value="uk">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Card>
-      <CardHeader>
-        <CardTitle>UK Correspondence Office</CardTitle>
-        <CardDescription>For mail handling and administrative inquiries</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-              <p className="font-medium">P.O. Box 174</p>
-              <p className="text-gray-600">Leeds LS1 1EL, United Kingdom</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>+44 113 123 4567</p>
-          </div>
-          <div className="flex items-start">
-            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <div>
-             
-                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
-             
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Link
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("P.O. Box 174, Leeds LS1 1EL, United Kingdom")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Get Directions
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-    </div>
-  </TabsContent>
+            {['all', 'switzerland', 'malta', 'uae', 'uk'].map((tab) => (
+              <TabsContent key={tab} value={tab}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {(tab === 'all' ? branches : branches.filter(b => b.countryCode === tab)).map((branch, index) => (
+                    <BranchCard key={index} branch={branch} />
+                  ))}
+                </div>
+              </TabsContent>
+            ))}
           </Tabs>
         </div>
       </section>
@@ -513,7 +246,7 @@ export default function ContactPage() {
               day.
             </p>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -600,7 +333,13 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start">
-                <input type="checkbox" id="consent" name="consent" required className="mt-1 mr-2" />
+                <input
+                  type="checkbox"
+                  id="consent"
+                  name="consent"
+                  required
+                  className="mt-1 mr-2"
+                />
                 <label htmlFor="consent" className="text-sm text-gray-600">
                   I consent to being contacted by Horizon Banking regarding my inquiry. *
                 </label>

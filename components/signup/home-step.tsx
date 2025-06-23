@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight, Shield, Clock, Users } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 // import type { SignupData } from "@/app/u/signup/page"
 import type { SignupStepProps } from "@/types/SignupStepProps"
 
@@ -77,7 +78,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
         {/* Image First on Mobile */}
         <div className="flex justify-center">
           <Image
-            src="/signup-bg.jpg?height=400&width=400"
+            src="/accountopening.png?height=400&width=400"
             alt="Secure banking illustration"
             width={400}
             height={400}
@@ -87,10 +88,19 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
       </div>
 
       <div className="text-center">
-        <Button onClick={handleGetStarted} size="lg" className="px-8 py-4 text-lg">
-          Get Started
-          <ArrowRight className="ml-2 w-5 h-5" />
-        </Button>
+        <div className="flex justify-center gap-4">
+          <Link href="/" passHref>
+            <Button asChild size="lg" variant="outline" className="px-8 py-4 text-lg">
+              <a>Go Home</a>
+            </Button>
+          </Link>
+          
+          <Button onClick={handleGetStarted} size="lg" className="px-8 py-4 text-lg">
+            Get Started
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>          
+        </div>
+      
         <p className="text-xs text-gray-500 mt-4">
           By continuing, you agree to our Terms of Service and Privacy Policy
         </p>

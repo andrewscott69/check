@@ -144,7 +144,7 @@ export default function OnlineBankingPage() {
                       </div>
                     </li>
                   </ul>
-                  <div className="flex flex-wrap gap-4">
+{/*                   <div className="flex flex-wrap gap-4">
                     <Button className="bg-green-600 hover:bg-green-700">
                       <Download className="mr-2 h-4 w-4" />
                       Download for iOS
@@ -153,7 +153,7 @@ export default function OnlineBankingPage() {
                       <Download className="mr-2 h-4 w-4" />
                       Download for Android
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </TabsContent>
@@ -195,7 +195,10 @@ export default function OnlineBankingPage() {
                       </div>
                     </li>
                   </ul>
-                  <Button className="bg-green-600 hover:bg-green-700">Access Online Banking</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">
+                     <Link href="/u/login">
+                        Access Online Banking
+                      </Link>  </Button>
                 </div>
                 <div className="relative h-[400px]">
                   <Image
@@ -253,7 +256,7 @@ export default function OnlineBankingPage() {
                       </div>
                     </li>
                   </ul>
-                  <Button className="bg-green-600 hover:bg-green-700">Download Tablet App</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Download Tablet App (SOON)</Button>
                 </div>
               </div>
             </TabsContent>
@@ -425,7 +428,11 @@ export default function OnlineBankingPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-green-600 hover:bg-green-700">Call Support</Button>
+                <Button className="w-full bg-green-600 hover:bg-green-700">
+                   <Link href="/contact#sendmsg">
+                        Contact Support
+                      </Link>    
+                </Button>
               </CardFooter>
             </Card>
 
@@ -444,7 +451,9 @@ export default function OnlineBankingPage() {
               </CardContent>
               <CardFooter>
                 <Button variant="outline" className="w-full">
-                  Start Chat
+                   <Link href="/contact#sendmsg">
+                        Chat With Us
+                      </Link>  
                 </Button>
               </CardFooter>
             </Card>

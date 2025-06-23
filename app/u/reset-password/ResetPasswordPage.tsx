@@ -53,8 +53,12 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
-      <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-bold">
-        <span>Silver Crest Bank</span>
+          <Link
+        href="/"
+        className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900"
+      >
+        <Image src="/Silver-Crest.png" alt="Silver Crest Logo" width={90} height={90} />
+        
       </Link>
 
       <Card className="w-full max-w-md shadow-xl">

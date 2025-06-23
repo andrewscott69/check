@@ -1,3 +1,4 @@
+"use client"
 import { FormEvent, useCallback } from "react"
 
 import Image from "next/image"

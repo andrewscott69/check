@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { countries } from "@/lib/countries";
+import { MobileNav } from "@/components/mobile-nav";
 import {
   ArrowLeft,
   Building,
@@ -15,7 +17,9 @@ import {
   Landmark,
   User,
   CheckCircle,
+  Bell,
 } from "lucide-react";
+import { UserNav } from "@/components/user-nav";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,6 +45,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { TransactionStatusCard } from "@/components/transcation-status-card";
+import Image from "next/image";
 
 interface BankAccount {
   id: string;
@@ -227,24 +232,32 @@ export default function TransferPage() {
   if (showSuccess && transferResult) {
     return (
       <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-          <Link
-            href="/u/dashboard"
-            className="flex items-center gap-2 text-lg font-semibold"
-          >
-            <DollarSign className="h-6 w-6" />
-            <span>SecureBank</span>
-          </Link>
+         <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
+          <nav className="hidden md:flex  items-center justify-center gap-4">
+            <Link
+              href="/u/dashboard"
+              className="flex items-center justify-center"
+            >
+              <Image
+                src="/Silver-Crest-BW.png"
+                alt="Silver Crest Logo"
+                width={80}
+                height={80}
+              />
+            </Link>
+            <Link
+              href="/u/dashboard"
+              className="text-sm font-medium text-white"
+            >
+              Dashboard
+            </Link>
+          </nav>
+
+          <MobileNav />
           <div className="ml-auto flex items-center gap-4">
-            <Button variant="ghost" size="sm">
-              Help
-            </Button>
-            <Button variant="outline" size="sm">
-              Notifications
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
-            </Button>
+            
+
+            <UserNav />
           </div>
         </header>
         <main className="flex-1 bg-slate-50 p-4 md:p-8">
@@ -304,26 +317,32 @@ export default function TransferPage() {
   // Rest of the component remains the same as your original code...
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <Link
-          href="/u/dashboard"
-          className="flex items-center gap-2 text-lg font-semibold"
-        >
-          <DollarSign className="h-6 w-6" />
-          <span>SecureBank</span>
+      <header className=" flex h-16 items-center justify-between border-b bg-slate-900 px-4 md:px-6">
+        <Link href="/u/dashboard" className="flex items-center gap-2">
+          <Image
+            src="/Silver-Crest-BW.png"
+            alt="Silver Crest Logo"
+            width={90}
+            height={90}
+            className="object-contain"
+          />
+          {/* Optional: add brand name */}
+          {/* <span className="text-white text-lg font-semibold">Silver Crest</span> */}
         </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <Button variant="ghost" size="sm">
-            Help
-          </Button>
-          <Button variant="outline" size="sm">
-            Notifications
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <User className="h-5 w-5" />
-          </Button>
+
+        <div className="flex items-center gap-4">
+          {/* <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full border-black text-amber-500 hover:text-amber-600"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="sr-only">Notifications</span>
+          </Button> */}
+          <UserNav />
         </div>
       </header>
+
       <main className="flex-1 bg-slate-50 p-4 md:p-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6 flex items-center">
@@ -383,7 +402,13 @@ export default function TransferPage() {
                                 <SelectItem key={account.id} value={account.id}>
                                   {account.accountName} (*
                                   {account.accountNumber.slice(-4)}) - $
-                                  {account.availableBalance.toFixed(2)}
+                                  {account.availableBalance.toLocaleString(
+                                    "en-US",
+                                    {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                    }
+                                  )}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -398,7 +423,24 @@ export default function TransferPage() {
                               placeholder="0.00"
                               className="pl-9"
                               value={amount}
-                              onChange={(e) => setAmount(e.target.value)}
+                              onChange={(e) => {
+                                const rawValue = e.target.value.replace(
+                                  /,/g,
+                                  ""
+                                );
+                                // Only allow numbers and decimals
+                                if (/^\d*\.?\d{0,2}$/.test(rawValue)) {
+                                  const [integer, decimal] =
+                                    rawValue.split(".");
+                                  const formattedInteger =
+                                    Number(integer).toLocaleString("en-US");
+                                  const formatted =
+                                    decimal !== undefined
+                                      ? `${formattedInteger}.${decimal}`
+                                      : formattedInteger;
+                                  setAmount(formatted);
+                                }
+                              }}
                             />
                           </div>
                         </div>
@@ -485,15 +527,11 @@ export default function TransferPage() {
                                 <SelectValue placeholder="Select country" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="uk">
-                                  United Kingdom
-                                </SelectItem>
-                                <SelectItem value="canada">Canada</SelectItem>
-                                <SelectItem value="australia">
-                                  Australia
-                                </SelectItem>
-                                <SelectItem value="germany">Germany</SelectItem>
-                                <SelectItem value="japan">Japan</SelectItem>
+                                {countries.map((country) => (
+                                  <SelectItem key={country} value={country}>
+                                    {country}
+                                  </SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
                           </div>
@@ -551,7 +589,7 @@ export default function TransferPage() {
                           />
                         </div>
 
-                        <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800">
+                        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-800">
                           <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
                           <p className="text-sm">
                             International transfers typically take 1-3 business
@@ -715,7 +753,7 @@ export default function TransferPage() {
 
                 <CardFooter className="flex flex-col space-y-2 border-t pt-4 mt-2">
                   <Button
-                    className="w-full"
+                    className="w-full bg-amber-500"
                     onClick={handleContinue}
                     disabled={!amount || !selectedAccount}
                   >
@@ -800,7 +838,11 @@ export default function TransferPage() {
                         Amount
                       </h3>
                       <p className="text-xl font-bold mt-1">
-                        ${Number.parseFloat(amount || "0").toFixed(2)}
+                        $
+                        {Number(amount || "0").toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </p>
                     </div>
                     <div>
@@ -851,7 +893,7 @@ export default function TransferPage() {
               </CardContent>
               <CardFooter className="flex flex-col space-y-2 border-t pt-4 mt-2">
                 <Button
-                  className="w-full"
+                  className="w-full bg-amber-500"
                   onClick={handleSubmit}
                   disabled={loading}
                 >

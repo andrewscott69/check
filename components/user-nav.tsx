@@ -44,7 +44,7 @@ export function UserNav() {
   }, [])
 
   const getInitials = (firstName?: string, lastName?: string) => {
-    if (!firstName || !lastName) return "JD"
+    if (!firstName || !lastName) return ""
     return `${firstName[0]}${lastName[0]}`.toUpperCase()
   }
 
@@ -82,19 +82,19 @@ export function UserNav() {
             <p className="text-sm font-medium leading-none">
               {userData ? `${userData.firstName} ${userData.lastName}` : "Loading..."}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
+            {/* <p className="text-xs leading-none text-muted-foreground">
               {userData?.email || ""}
-            </p>
+            </p> */}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/u/settings">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           {/* <DropdownMenuItem asChild>
             <Link href="/u/cards">
               <CreditCard className="mr-2 h-4 w-4" />

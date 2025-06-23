@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function ResetPasswordPage() {
   const router = useRouter()

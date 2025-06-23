@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -10,9 +10,9 @@ import {
   Loader2,
   Mail,
   Phone,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,40 +20,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 function maskPhoneNumber(phone: string) {
-  const cleaned = phone.replace(/\D/g, "")
-  const last4 = cleaned.slice(-4)
-  return `+***-***-${last4}`
+  const cleaned = phone.replace(/\D/g, "");
+  const last4 = cleaned.slice(-4);
+  return `+***-***-${last4}`;
 }
 
 export default function VerifyOtpPage() {
-  const router = useRouter()
-  const [otp, setOtp] = useState(Array(6).fill(""))
-  const [isLoading, setIsLoading] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(60)
-  const [canResend, setCanResend] = useState(false)
-  const [email, setEmail] = useState("")
-  const [maskedPhone, setMaskedPhone] = useState<string | null>(null)
-  const [status, setStatus] = useState<"signup" | "login" | "transfer" | null>(null)
-  const [isVerified, setIsVerified] = useState(false)
+  const router = useRouter();
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [isLoading, setIsLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const [email, setEmail] = useState("");
+  const [maskedPhone, setMaskedPhone] = useState<string | null>(null);
+  const [status, setStatus] = useState<"signup" | "login" | "transfer" | null>(
+    null
+  );
+  const [isVerified, setIsVerified] = useState(false);
 
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    const storedEmail = sessionStorage.getItem("verificationEmail")
-    const storedStatus = sessionStorage.getItem("verificationStatus")
+    const storedEmail = sessionStorage.getItem("verificationEmail");
+    const storedStatus = sessionStorage.getItem("verificationStatus");
 
     if (!storedEmail || !storedStatus) {
-      toast.error("Verification session expired. Please login again.")
-      router.push("/u/login")
+      toast.error("Verification session expired. Please login again.");
+      router.push("/u/login");
     } else {
-      setEmail(storedEmail)
-      setStatus(storedStatus as "signup" | "login" | "transfer")
+      setEmail(storedEmail);
+      setStatus(storedStatus as "signup" | "login" | "transfer");
 
       fetch("/api/auth/get-phone", {
         method: "POST",
@@ -63,135 +66,143 @@ export default function VerifyOtpPage() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success && data.phone) {
-            setMaskedPhone(maskPhoneNumber(data.phone))
+            setMaskedPhone(maskPhoneNumber(data.phone));
           }
         })
-        .catch(() => toast.error("Unable to retrieve phone number"))
+        .catch(() => toast.error("Unable to retrieve phone number"));
     }
-  }, [router])
+  }, [router]);
 
   useEffect(() => {
     if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
     }
-    setCanResend(true)
-  }, [timeLeft])
+    setCanResend(true);
+  }, [timeLeft]);
 
   const handleChange = (index: number, value: string) => {
-    if (!/^[0-9]?$/.test(value)) return
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-    if (value && index < 5) inputRefs.current[index + 1]?.focus()
-  }
+    if (!/^[0-9]?$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
+  };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
+      inputRefs.current[index - 1]?.focus();
     }
-  }
+  };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const pasted = e.clipboardData.getData("text/plain").trim()
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text/plain").trim();
     if (/^\d{6}$/.test(pasted)) {
-      setOtp(pasted.split(""))
-      inputRefs.current[5]?.focus()
+      setOtp(pasted.split(""));
+      inputRefs.current[5]?.focus();
     }
-  }
+  };
 
   const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const otpValue = otp.join("")
+    e.preventDefault();
+    const otpValue = otp.join("");
     if (!email || !status) {
-      toast.error("Missing email or status. Please restart verification.")
-      return router.push("/u/login")
+      toast.error("Missing email or status. Please restart verification.");
+      return router.push("/u/login");
     }
 
-    if (otpValue.length !== 6) return toast.error("Please enter all 6 digits")
-    setIsLoading(true)
+    if (otpValue.length !== 6) return toast.error("Please enter all 6 digits");
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue, status }),
-      })
+      });
 
-      const result = await response.json()
-      if (!response.ok) throw new Error(result.error || "Verification failed")
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Verification failed");
 
       if (status === "transfer") {
-        const transferData = sessionStorage.getItem("transferData")
-        if (!transferData) throw new Error("Missing transfer data")
+        const transferData = sessionStorage.getItem("transferData");
+        if (!transferData) throw new Error("Missing transfer data");
 
-        const parsed = JSON.parse(transferData)
-        parsed.status = "verified"
+        const parsed = JSON.parse(transferData);
+        parsed.status = "verified";
 
         const transferRes = await fetch("/api/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(parsed),
-        })
+        });
 
-        const transferResult = await transferRes.json()
-        if (!transferRes.ok) throw new Error(transferResult.error || "Transfer failed")
+        const transferResult = await transferRes.json();
+        if (!transferRes.ok)
+          throw new Error(transferResult.error || "Transfer failed");
 
-        toast.success("Transfer successful")
-        sessionStorage.removeItem("transferData")
+        toast.success("Transfer successful");
+        sessionStorage.removeItem("transferData");
       }
 
-      setIsVerified(true)
-      sessionStorage.removeItem("verificationEmail")
-      sessionStorage.removeItem("verificationStatus")
-      toast.success("Verified successfully")
+      setIsVerified(true);
+      sessionStorage.removeItem("verificationEmail");
+      sessionStorage.removeItem("verificationStatus");
+      toast.success("Verified successfully");
 
       setTimeout(() => {
-        if (status === "login") router.push("/u/dashboard")
-        else if (status === "transfer") router.push("/u/dashboard/send")
-        else router.push("/u/login")
-      }, 2000)
+        if (status === "login") router.push("/u/dashboard");
+        else if (status === "transfer") router.push("/u/dashboard/send");
+        else router.push("/u/login");
+      }, 2000);
     } catch (error: any) {
-      toast.error(error.message || "Something went wrong")
+      toast.error(error.message || "Something went wrong");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleResendOtp = async () => {
-    if (!canResend || !email || !status) return
-    setCanResend(false)
-    setTimeLeft(60)
+    if (!canResend || !email || !status) return;
+    setCanResend(false);
+    setTimeLeft(60);
 
     try {
       const response = await fetch("/api/auth/resend-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, status }),
-      })
+      });
 
-      const result = await response.json()
-      if (!response.ok) throw new Error(result.error || "Failed to resend code")
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.error || "Failed to resend code");
 
-      toast.success("A new verification code has been sent to your phone.")
+      toast.success("A new verification code has been sent to your Authentication Device.");
     } catch (error: any) {
-      toast.error("Resend failed", { description: error.message })
-      setCanResend(true)
+      toast.error("Resend failed", { description: error.message });
+      setCanResend(true);
     }
-  }
+  };
 
   const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-    const s = seconds % 60
-    return `${m}:${s < 10 ? "0" : ""}${s}`
-  }
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-white p-4 md:p-8">
-      <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900">
-        <DollarSign className="h-8 w-8 text-primary" />
-        <span>Silver Crest</span>
+      <Link
+        href="/"
+        className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900"
+      >
+        <Image src="/Silver-Crest.png" alt="Silver Crest Logo" width={90} height={90} />
+        
       </Link>
 
       <Card className="mx-auto w-full max-w-md overflow-hidden border-none shadow-xl">
@@ -201,7 +212,9 @@ export default function VerifyOtpPage() {
               <CheckCircle2 className="h-10 w-10" />
             </div>
             <h2 className="mb-3 text-2xl font-bold text-slate-900">
-              {status === "transfer" ? "Transfer Confirmed!" : "Email Verified!"}
+              {status === "transfer"
+                ? "Transaction Confirmed!"
+                : "Account Verified!"}
             </h2>
             <p className="mb-6 text-slate-500">
               {status === "signup"
@@ -211,13 +224,15 @@ export default function VerifyOtpPage() {
                 : "Redirecting to dashboard..."}
             </p>
             <Button asChild size="lg" className="w-full">
-              <Link href={
-                status === "signup"
-                  ? "/u/login"
-                  : status === "transfer"
-                  ? "/u/dashboard/send"
-                  : "/u/dashboard"
-              }>
+              <Link
+                href={
+                  status === "signup"
+                    ? "/u/login"
+                    : status === "transfer"
+                    ? "/u/dashboard/send"
+                    : "/u/dashboard"
+                }
+              >
                 Go
               </Link>
             </Button>
@@ -226,13 +241,20 @@ export default function VerifyOtpPage() {
           <>
             <CardHeader className="space-y-4 pb-6 pt-8">
               <div className="flex items-center">
-                <Button variant="ghost" size="icon" asChild className="mr-2 rounded-full">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="mr-2 rounded-full"
+                >
                   <Link href="/u/login">
                     <ArrowLeft className="h-4 w-4" />
                   </Link>
                 </Button>
                 <CardTitle className="text-2xl font-bold text-slate-900">
-                  {status === "transfer" ? "Confirm Transfer" : "Verify your phone number"}
+                  {status === "transfer"
+                    ? "Confirm Transaction"
+                    : "Verify Account"}
                 </CardTitle>
               </div>
               <div className="flex items-center gap-3 rounded-lg bg-slate-50 p-3">
@@ -240,7 +262,9 @@ export default function VerifyOtpPage() {
                   <Phone className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-900">Code sent to Authentication Device:</p>
+                  <p className="text-sm font-medium text-slate-900">
+                    Code sent to Authentication Device
+                  </p>
                   {/* <p className="text-sm text-slate-500">{maskedPhone || "Loading..."}</p> */}
                 </div>
               </div>
@@ -258,7 +282,7 @@ export default function VerifyOtpPage() {
                     <Input
                       key={index}
                       ref={(el) => {
-                        inputRefs.current[index] = el
+                        inputRefs.current[index] = el;
                       }}
                       type="text"
                       inputMode="numeric"
@@ -269,7 +293,9 @@ export default function VerifyOtpPage() {
                       onPaste={index === 0 ? handlePaste : undefined}
                       className={cn(
                         "h-14 w-12 text-center text-lg font-semibold transition-all sm:h-16 sm:w-14",
-                        digit ? "border-primary bg-primary/5" : "border-slate-200"
+                        digit
+                          ? "border-primary bg-primary/5"
+                          : "border-slate-200"
                       )}
                       autoFocus={index === 0}
                     />
@@ -295,7 +321,9 @@ export default function VerifyOtpPage() {
             </CardContent>
 
             <CardFooter className="flex flex-col items-center border-t bg-slate-50 p-6">
-              <div className="mb-2 text-sm text-slate-500">Didn't receive the code?</div>
+              <div className="mb-2 text-sm text-slate-500">
+                Didn't receive the code?
+              </div>
               <Button
                 variant="ghost"
                 type="button"
@@ -303,14 +331,19 @@ export default function VerifyOtpPage() {
                 disabled={!canResend}
                 className={cn(
                   "h-auto text-sm font-medium",
-                  canResend ? "text-primary hover:text-primary/90" : "text-slate-400"
+                  canResend
+                    ? "text-primary hover:text-primary/90"
+                    : "text-slate-400"
                 )}
               >
                 {canResend ? (
                   "Resend Code"
                 ) : (
                   <>
-                    Resend code in <span className="font-semibold">{formatTime(timeLeft)}</span>
+                    Resend code in{" "}
+                    <span className="font-semibold">
+                      {formatTime(timeLeft)}
+                    </span>
                   </>
                 )}
               </Button>
@@ -319,5 +352,5 @@ export default function VerifyOtpPage() {
         )}
       </Card>
     </div>
-  )
+  );
 }

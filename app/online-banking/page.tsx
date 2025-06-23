@@ -28,7 +28,10 @@ export default function OnlineBankingPage() {
             </p>
             <Link href="/u/signup">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-              Enroll Now <ChevronRight className="ml-1 h-4 w-4" />
+              
+               <Link href="/contact#sendmsg">
+                  Enroll Now <ChevronRight className="ml-1 h-4 w-4" />
+               </Link>  
             </Button>
               </Link>
           </div>

@@ -9,8 +9,8 @@ export default function AboutPage() {
       <section className="relative w-full h-[400px] bg-gradient-to-r from-emerald-900 to-green-900">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/placeholder.svg?height=400&width=1920"
-            alt="About Horizon Banking"
+            src="/abouot.jpg?height=400&width=1920"
+            alt="About Silver Crest Bank "
             fill
             className="object-cover opacity-40 mix-blend-overlay"
             priority
@@ -18,7 +18,7 @@ export default function AboutPage() {
         </div>
         <div className="container relative z-10 mx-auto px-4 py-16 h-full flex flex-col justify-center">
           <div className="max-w-2xl text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">About Horizon Banking</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">About Silver Crest Bank </h1>
             <p className="text-lg mb-8">
               A trusted financial partner committed to helping individuals, families, and businesses achieve their
               financial goals since 1985.
@@ -33,7 +33,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px]">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/aboutus.jpg?height=400&width=600"
                 alt="Our Story"
                 fill
                 className="object-cover rounded-lg"
@@ -42,13 +42,13 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
               <p className="text-gray-600 mb-4">
-                Founded in 1985, Horizon Banking began as a small community bank with a single branch and a vision to
+                Founded in 1985, Silver Crest Bank began as a small community bank with a single branch and a vision to
                 provide personalized financial services that put customers first. Over the decades, we've grown to serve
                 communities across the region while maintaining our commitment to exceptional service and community
                 involvement.
               </p>
               <p className="text-gray-600 mb-4">
-                Today, Horizon Banking is a full-service financial institution offering a comprehensive range of
+                Today, Silver Crest Bank  is a full-service financial institution offering a comprehensive range of
                 banking, lending, and wealth management solutions for individuals and businesses. While we've embraced
                 modern technology and innovative services, our core values remain unchanged: integrity, excellence, and
                 a dedication to helping our customers achieve financial success.
@@ -126,19 +126,19 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="CEO" fill className="object-cover" />
+                <Image src="/ceojpg?height=160&width=160" alt="CEO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Robert Johnson</h3>
               <p className="text-green-700 font-medium mb-2">Chief Executive Officer</p>
               <p className="text-gray-600 mb-4">
-                With over 25 years of experience in the financial industry, Robert has led Horizon Banking since 2015,
+                With over 25 years of experience in the financial industry, Robert has led Silver Crest Bank  since 2015,
                 focusing on strategic growth and digital transformation.
               </p>
             </div>
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="CFO" fill className="object-cover" />
+                <Image src="/cfo.png?height=160&width=160" alt="CFO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Maria Rodriguez</h3>
               <p className="text-green-700 font-medium mb-2">Chief Financial Officer</p>
@@ -150,7 +150,7 @@ export default function AboutPage() {
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="COO" fill className="object-cover" />
+                <Image src="/cpo.jpg?height=160&width=160" alt="COO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">David Chen</h3>
               <p className="text-green-700 font-medium mb-2">Chief Operations Officer</p>
@@ -162,12 +162,12 @@ export default function AboutPage() {
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="CTO" fill className="object-cover" />
+                <Image src="/cto.jpg?height=160&width=160" alt="CTO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Sarah Williams</h3>
               <p className="text-green-700 font-medium mb-2">Chief Technology Officer</p>
               <p className="text-gray-600 mb-4">
-                Sarah leads our digital innovation initiatives, ensuring that Horizon Banking remains at the forefront
+                Sarah leads our digital innovation initiatives, ensuring that Silver Crest Bank  remains at the forefront
                 of financial technology.
               </p>
             </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="CMO" fill className="object-cover" />
+                <Image src="/cmo.jpg?height=160&width=160" alt="CMO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Lisa Patel</h3>
               <p className="text-green-700 font-medium mb-2">Chief Marketing Officer</p>
@@ -276,9 +276,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="mt-12 text-center">
-            <Button className="bg-green-700 hover:bg-green-800">Learn More About Our Foundation</Button>
-          </div>
+         
         </div>
       </section>
 
@@ -329,11 +327,18 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
           <p className="text-lg mb-8 max-w-2xl mx-auto">
             We're looking for talented individuals who share our values and passion for helping customers achieve their
-            financial goals. Explore career opportunities at Horizon Banking.
+            financial goals. Explore career opportunities at Silver Crest Bank .
           </p>
-          <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-            View Career Opportunities <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
+          
+          <Button
+                size="lg"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                asChild
+              >
+                <Link href="/u/signup">
+                  View Career Opportunities <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
         </div>
       </section>
     </main>

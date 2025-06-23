@@ -3,6 +3,7 @@ import { ChevronRight, Check, Smartphone, Shield, CreditCard, Clock, Bell, Downl
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Link from "next/link"
 
 export default function OnlineBankingPage() {
   return (

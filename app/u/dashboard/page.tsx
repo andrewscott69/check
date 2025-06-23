@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+
 import { useTransition } from "react";
 import {
   Card,
@@ -177,28 +179,28 @@ export default function DashboardPage() {
       toast.error("User data not loaded.");
       return;
     }
-  
+
     if (!accountType) {
       toast.error("Please select an account type.");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const res = await fetch("/api/accounts/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ accountType, email: userData.email }),
       });
-  
+
       const result = await res.json();
-  
+
       if (!res.ok) {
         toast.error(result.error || "Failed to create account.");
         return;
       }
-  
+
       toast.success("Account created successfully!");
       setOpen(false);
       setAccountType("");
@@ -208,7 +210,6 @@ export default function DashboardPage() {
       setLoading(false);
     }
   };
-  
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -311,12 +312,45 @@ export default function DashboardPage() {
 
   if (error || !userData) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">{error || "Failed to load data."}</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
+      <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+      <div className="max-w-md w-full rounded-2xl bg-white p-8 shadow-lg border border-gray-200 text-center">
+        <div className="mb-6 flex justify-center">
+          <div className="h-14 w-14 rounded-full bg-red-100 flex items-center justify-center">
+            <svg
+              className="h-7 w-7 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728" />
+            </svg>
+          </div>
+        </div>
+    
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">Oops, something went wrong</h2>
+        <p className="text-sm text-gray-500 mb-6">
+          {error || "We were unable to load the data. Please try again or contact support."}
+        </p>
+    
+        <div className="space-y-2">
+          <Button
+            onClick={() => window.location.reload()}
+            className="w-full bg-red-600 hover:bg-red-700 text-white"
+          >
+            Try Again
+          </Button>
+    
+          <Button
+            variant="outline"
+            asChild
+            className="w-full border-gray-300 hover:bg-gray-50"
+          >
+            <a href="/u/login">Back to Login</a>
+          </Button>
         </div>
       </div>
+    </div>
+    
     );
   }
 
@@ -380,14 +414,18 @@ export default function DashboardPage() {
       <div
         className={hasPendingAccount ? "pointer-events-none opacity-30" : ""}
       >
-        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-black text-white px-4 md:px-6">
-          <nav className="hidden md:flex md:gap-2 lg:gap-4">
+        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
+          <nav className="hidden md:flex  items-center justify-center gap-4">
             <Link
-              href="/"
-              className="flex items-center gap-2 text-lg font-semibold"
+              href="/u/dashboard"
+              className="flex items-center justify-center"
             >
-              <DollarSign className="h-6 w-6" />
-              <span>Silver Crest</span>
+              <Image
+                src="/Silver-Crest-BW.png"
+                alt="Silver Crest Logo"
+                width={80}
+                height={80}
+              />
             </Link>
             <Link
               href="/u/dashboard"
@@ -395,47 +433,12 @@ export default function DashboardPage() {
             >
               Dashboard
             </Link>
-            {/* <Link
-              href="/u/accounts"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Accounts
-            </Link> */}
-            {/* <Link
-              href="/u/cards"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Cards
-            </Link>
-            <Link
-              href="/u/transactions"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Transactions
-            </Link>
-            <Link
-              href="/u/settings"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              Settings
-            </Link> */}
           </nav>
-          <MobileNav  />
+
+          <MobileNav />
           <div className="ml-auto flex items-center gap-4">
-            {/* <form className="hidden md:flex">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-64 rounded-lg bg-background pl-8 md:w-80"
-                />
-              </div>
-            </form> */}
-            <Button variant="outline" size="icon" className="rounded-full">
-              <Bell className="h-4 w-4" />
-              <span className="sr-only text-black">Notifications</span>
-            </Button>
+            
+
             <UserNav />
           </div>
         </header>
@@ -460,7 +463,6 @@ export default function DashboardPage() {
                   Receive
                 </Link>
               </Button> */}
-             
 
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
@@ -580,7 +582,7 @@ export default function DashboardPage() {
                           <span className="text-sm text-muted-foreground">
                             Available Balance
                           </span>
-                          <span className="font-semibold bg-green-100 text-green-800 px-2 py-1 rounded">
+                          <span className="font-semibold bg-amber-100 text-amber-800 px-2 py-1 rounded">
                             $
                             {account.availableBalance.toLocaleString("en-US", {
                               minimumFractionDigits: 2,
@@ -754,7 +756,7 @@ export default function DashboardPage() {
                             <div className="text-right flex items-center justify-end">
                               {selectedAccountData.hasOverdraftProtection ? (
                                 <>
-                                  <CheckCircle2 className="h-4 w-4 text-green-600 mr-1" />
+                                  <CheckCircle2 className="h-4 w-4 text-amber-600 mr-1" />
                                   <span>
                                     Enabled ($
                                     {selectedAccountData.overdraftLimit.toFixed(
@@ -806,24 +808,24 @@ export default function DashboardPage() {
                       </Card>
 
                       <div className="space-y-3">
-                        <Button className="w-full justify-between">
+                        {/* <Button className="w-full justify-between">
                           View Statements
                           <ChevronRight className="h-4 w-4" />
-                        </Button>
-                        <Button
+                        </Button> */}
+                        {/* <Button
                           variant="outline"
                           className="w-full justify-between"
                         >
                           Account Settings
                           <ChevronRight className="h-4 w-4" />
-                        </Button>
-                        <Button
+                        </Button> */}
+                        {/* <Button
                           variant="outline"
                           className="w-full justify-between"
                         >
                           Direct Deposit Form
                           <ChevronRight className="h-4 w-4" />
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
                   </div>

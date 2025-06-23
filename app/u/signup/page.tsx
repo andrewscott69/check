@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
+import logo from "@/public/Crest icon.png" // 
 import {
   Home,
   UserPlus,
@@ -146,7 +148,10 @@ export default function SignupProcess() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Instant Account Opening</h1>
           <div className="flex justify-end">
-            <div className="text-2xl font-bold text-blue-600">Silver Crest Bank</div>
+            <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
+              <Image src={logo} alt="Silver Crest Bank Logo" width={30} height={30} />
+              Silver Crest Bank
+            </div>
           </div>
         </div>
 

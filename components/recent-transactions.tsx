@@ -1,13 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowLeftRight,
-  MoreHorizontal,
-} from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowLeftRight, MoreHorizontal } from "lucide-react"
 import { format } from "date-fns"
 
 import { Button } from "@/components/ui/button"
@@ -20,12 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+
 
 export enum TransactionType {
   DEPOSIT = "DEPOSIT",
@@ -71,12 +60,30 @@ interface RecentTransactionsProps {
 }
 
 export function RecentTransactions({ transactions = [] }: RecentTransactionsProps) {
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const handleView = (tx: Transaction) => {
-    setSelectedTransaction(tx)
-    setIsModalOpen(true)
+  
+  if (transactions.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <div className="rounded-full bg-muted p-3 mb-4">
+          <svg
+            className="h-6 w-6 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 2v20m9-9H3" />
+          </svg>
+        </div>
+        <h3 className="font-semibold text-sm mb-1">No transactions yet</h3>
+        <p className="text-xs text-muted-foreground">Your recent transactions will appear here</p>
+      </div>
+    )
   }
 
   const getTransactionIcon = (type: TransactionType) => {
@@ -101,6 +108,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
         return "bg-emerald-100"
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
+        return "bg-rose-100"
       case TransactionType.TRANSFER:
         return "bg-rose-100"
       default:
@@ -115,6 +123,7 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
         return "text-emerald-600"
       case TransactionType.WITHDRAWAL:
       case TransactionType.PAYMENT:
+        return "text-rose-600"
       case TransactionType.TRANSFER:
         return "text-rose-600"
       default:
@@ -194,85 +203,63 @@ export function RecentTransactions({ transactions = [] }: RecentTransactionsProp
   }
 
   return (
-    <>
-      <div className="space-y-4">
-        {transactions.slice(0, 5).map((transaction) => (
-          <div key={transaction.id} className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div
-                className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(transaction.type)}`}
-              >
-                {getTransactionIcon(transaction.type)}
-              </div>
-              <div>
-                <div className="font-medium">
-                  {transaction.description || `${transaction.type.charAt(0) + transaction.type.slice(1).toLowerCase()}`}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{formatDate(transaction.createdAt)}</span>
-                  {getStatusBadge(transaction.status)}
-                </div>
-              </div>
+    <div className="space-y-4">
+      {transactions.slice(0, 5).map((transaction) => (
+        <div key={transaction.id} className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(transaction.type)}`}
+            >
+              {getTransactionIcon(transaction.type)}
             </div>
-            <div className="flex items-center gap-4">
-              <div className={`text-sm font-medium ${getTransactionAmountColor(transaction.type)}`}>
-                {formatAmount(transaction.amount, transaction.type, transaction.currencyType)}
+            <div>
+              <div className="font-medium">
+                {transaction.description || `${transaction.type.charAt(0) + transaction.type.slice(1).toLowerCase()}`}
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => handleView(transaction)}>View Details</DropdownMenuItem>
-                  <DropdownMenuItem>Download Receipt</DropdownMenuItem>
-                  {transaction.txHash && (
-                    <DropdownMenuItem asChild>
-                      <Link href={`https://etherscan.io/tx/${transaction.txHash}`} target="_blank">
-                        View on Blockchain
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{formatDate(transaction.createdAt)}</span>
+                {getStatusBadge(transaction.status)}
+              </div>
             </div>
           </div>
-        ))}
-        <div className="flex justify-center">
-          <Button variant="outline" asChild>
-            <Link href="/u/dashboard/transactions">View All Transactions</Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Transaction Detail Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Transaction Details</DialogTitle>
-          </DialogHeader>
-          {selectedTransaction && (
-            <div className="space-y-2 text-sm">
-              <p><strong>Type:</strong> {selectedTransaction.type}</p>
-              <p><strong>Amount:</strong> {formatAmount(selectedTransaction.amount, selectedTransaction.type, selectedTransaction.currencyType)}</p>
-              <p><strong>Status:</strong> {selectedTransaction.status}</p>
-              <p><strong>Description:</strong> {selectedTransaction.description || "—"}</p>
-              <p><strong>Date:</strong> {formatDate(selectedTransaction.createdAt)}</p>
-              {selectedTransaction.txHash && (
-                <p>
-                  <strong>Tx Hash:</strong>{" "}
-                  <a href={`https://etherscan.io/tx/${selectedTransaction.txHash}`} target="_blank" className="text-blue-600 underline">
-                    View on Etherscan
-                  </a>
-                </p>
-              )}
+          <div className="flex items-center gap-4">
+            <div className={`text-sm font-medium ${getTransactionAmountColor(transaction.type)}`}>
+              {formatAmount(transaction.amount, transaction.type, transaction.currencyType)}
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">More options</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href={`/u/transactions/${transaction.id}`}>View Details</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>Download Receipt</DropdownMenuItem>
+                {transaction.status === TransactionStatus.PENDING && (
+                  <DropdownMenuItem className="text-red-600">Cancel Transaction</DropdownMenuItem>
+                )}
+                {transaction.txHash && (
+                  <DropdownMenuItem asChild>
+                    <Link href={`https://etherscan.io/tx/${transaction.txHash}`} target="_blank">
+                      View on Blockchain
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      ))}
+      <div className="flex justify-center">
+        <Button variant="outline" asChild>
+          <Link href="/u/dashboard/transactions">View All Transactions</Link>
+        </Button>
+      </div>
+    </div>
   )
 }

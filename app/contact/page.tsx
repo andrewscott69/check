@@ -190,33 +190,313 @@ export default function ContactPage() {
 
             <TabsContent value="all">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {branches.map((branch, idx) => <BranchCard key={idx} branch={branch} />)}
+                   <Card>
+      <CardHeader>
+        <CardTitle>Swiss Private Office</CardTitle>
+        <CardDescription>Prestige branch in the heart of Porrentruy</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">Avenue de la Liberté 25</p>
+              <p className="text-gray-600">2900 Porrentruy, Switzerland</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+41 32 466 78 90</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              
+                <p >Mon-Fri: 8:30 AM - 4:30 PM</p>
+             
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
+                 <Card>
+      <CardHeader>
+        <CardTitle>Mediterranean Service Hub</CardTitle>
+        <CardDescription>Full-service location in sunny Zabbar</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">67, St. James Street</p>
+              <p className="text-gray-600">Zabbar ZBR 1401, Malta</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+356 21 234 567</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              
+                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
+                <p>Sat: 9:00 AM - 12:00 PM</p>
+            
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("67, St. James Street, Zabbar ZBR 1401, Malta")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
+
+     <Card>
+      <CardHeader>
+        <CardTitle>Gulf Corporate Branch</CardTitle>
+        <CardDescription>Free zone access and private banking support</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">Al Faseel, Fujairah Free Zone</p>
+              <p className="text-gray-600">P.O. Box 4425, Fujairah, UAE</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+971 9 222 3344</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              
+                <p>Sun-Thu: 8:00 AM - 2:00 PM</p>
+              
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Al Faseel, Fujairah Free Zone, Fujairah, UAE")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
+
+     <Card>
+      <CardHeader>
+        <CardTitle>UK Correspondence Office</CardTitle>
+        <CardDescription>For mail handling and administrative inquiries</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">P.O. Box 174</p>
+              <p className="text-gray-600">Leeds LS1 1EL, United Kingdom</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+44 113 123 4567</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+             
+                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
+             
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("P.O. Box 174, Leeds LS1 1EL, United Kingdom")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
               </div>
             </TabsContent>
 
             <TabsContent value="malta">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {branches.filter(b => b.country === "malta").map((branch, idx) => (
-        <BranchCard key={idx} branch={branch} />
-      ))}
+      <Card>
+      <CardHeader>
+        <CardTitle>Swiss Private Office</CardTitle>
+        <CardDescription>Prestige branch in the heart of Porrentruy</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">Avenue de la Liberté 25</p>
+              <p className="text-gray-600">2900 Porrentruy, Switzerland</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+41 32 466 78 90</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              
+                <p >Mon-Fri: 8:30 AM - 4:30 PM</p>
+             
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
     </div>
   </TabsContent>
 
   {/* UAE */}
   <TabsContent value="uae">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {branches.filter(b => b.country === "uae").map((branch, idx) => (
-        <BranchCard key={idx} branch={branch} />
-      ))}
+      <Card>
+      <CardHeader>
+        <CardTitle>Gulf Corporate Branch</CardTitle>
+        <CardDescription>Free zone access and private banking support</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">Al Faseel, Fujairah Free Zone</p>
+              <p className="text-gray-600">P.O. Box 4425, Fujairah, UAE</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+971 9 222 3344</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              
+                <p>Sun-Thu: 8:00 AM - 2:00 PM</p>
+              
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Al Faseel, Fujairah Free Zone, Fujairah, UAE")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
     </div>
   </TabsContent>
 
   {/* UK */}
   <TabsContent value="uk">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {branches.filter(b => b.country === "uk").map((branch, idx) => (
-        <BranchCard key={idx} branch={branch} />
-      ))}
+      <Card>
+      <CardHeader>
+        <CardTitle>UK Correspondence Office</CardTitle>
+        <CardDescription>For mail handling and administrative inquiries</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <MapPin className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+              <p className="font-medium">P.O. Box 174</p>
+              <p className="text-gray-600">Leeds LS1 1EL, United Kingdom</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <p>+44 113 123 4567</p>
+          </div>
+          <div className="flex items-start">
+            <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
+            <div>
+             
+                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
+             
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Link
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("P.O. Box 174, Leeds LS1 1EL, United Kingdom")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button variant="outline" className="w-full">
+            Get Directions
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
     </div>
   </TabsContent>
           </Tabs>

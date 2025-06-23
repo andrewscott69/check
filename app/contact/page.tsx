@@ -126,8 +126,8 @@ export default function ContactPage() {
 const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
 
     e.preventDefault()
-    const formData = new FormData(e.target)
-    const data = Object.fromEntries(formData.entries())
+    const formData = new FormData(e.target as HTMLFormElement)
+  const data = Object.fromEntries(formData.entries())
     console.log(data)
     // Send to API or display success toast
   }, [])

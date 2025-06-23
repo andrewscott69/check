@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { ChevronRight, Award, Users, Globe, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function AboutPage() {
   return (

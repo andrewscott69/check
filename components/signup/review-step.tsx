@@ -136,13 +136,13 @@ export default function ReviewStep({ data, onSubmit, onPrev, isLoading }: Signup
       
       </div>
 
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-amber-50 border-amber-200">
         <CardContent className="p-4">
           <div className="flex items-start space-x-3">
-            <CheckCircle2 className="w-5 h-5 text-blue-600 mt-0.5" />
+            <CheckCircle2 className="w-5 h-5 text-amber-600 mt-0.5" />
             <div>
-              <p className="font-medium text-blue-900">Ready to Submit</p>
-              <p className="text-sm text-blue-700">
+              <p className="font-medium text-amber-900">Ready to Submit</p>
+              <p className="text-sm text-amber-700">
                 Your application is complete. After submission, you'll receive an email verification code to activate
                 your account.
               </p>
@@ -166,15 +166,15 @@ export default function ReviewStep({ data, onSubmit, onPrev, isLoading }: Signup
           />
           <Label htmlFor="terms" className="text-sm leading-relaxed">
             I agree to the{" "}
-            <a href="/terms" target="_blank" className="text-blue-600 hover:underline" rel="noreferrer">
+            <a href="/terms" target="_blank" className="text-amber-600 hover:underline" rel="noreferrer">
               Terms of Service
             </a>
             ,{" "}
-            <a href="/privacy" target="_blank" className="text-blue-600 hover:underline" rel="noreferrer">
+            <a href="/privacy" target="_blank" className="text-amber-600 hover:underline" rel="noreferrer">
               Privacy Policy
             </a>
             , and{" "}
-            <a href="/account-agreement" target="_blank" className="text-blue-600 hover:underline" rel="noreferrer">
+            <a href="/account-agreement" target="_blank" className="text-amber-600 hover:underline" rel="noreferrer">
               Account Agreement
             </a>
             . I understand that SecureBank will verify my identity and may contact me for additional information if
@@ -196,7 +196,7 @@ export default function ReviewStep({ data, onSubmit, onPrev, isLoading }: Signup
             Back
           </Button>
         )}
-        <Button onClick={handleSubmit} disabled={!agreeToTerms || isLoading} className="ml-auto px-8" size="lg">
+        <Button onClick={handleSubmit} disabled={!agreeToTerms || isLoading} className="ml-auto px-8 bg-amber-500" size="lg">
           {isLoading ? (
             <>
               <Loader2 className="mr-2 w-4 h-4 animate-spin" />

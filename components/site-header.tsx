@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useState } from "react"
 
 export function SiteHeader() {
-  const [activeTab, setActiveTab] = useState("personal")
+  // const [activeTab, setActiveTab] = useState("personal")
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -20,14 +20,14 @@ export function SiteHeader() {
             <Link href="/" className="flex items-center">
               <Image
                 src="/Silver Crest.png"
-                alt="Horizon Banking"
+                alt="Silver Crest Banking"
                 width={180}
                 height={50}
                 className="h-10 w-auto"
               />
             </Link>
 
-            <nav className="hidden lg:flex space-x-1">
+{/*             <nav className="hidden lg:flex space-x-1">
               <Button
                 variant="ghost"
                 className={`text-white text-base font-medium h-20 px-6 rounded-none border-b-2 ${
@@ -55,7 +55,7 @@ export function SiteHeader() {
               >
                 WEALTH MANAGEMENT
               </Button>
-            </nav>
+            </nav> */}
           </div>
 
           <div className="flex items-center gap-4">

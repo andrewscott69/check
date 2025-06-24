@@ -26,7 +26,6 @@ type Branch = {
   description: string
   address: string
   location: string
-  phone: string
   hours: string[]
   mapsQuery: string
 }
@@ -37,7 +36,6 @@ const branches = [
     description: "Prestige branch in the heart of Porrentruy",
     address: "Avenue de la Liberté 25",
     location: "2900 Porrentruy, Switzerland",
-    phone: "+41 32 466 78 90",
     hours: ["Mon-Fri: 8:30 AM - 4:30 PM"],
     mapsQuery: "Avenue de la Liberté 25, 2900 Porrentruy, Switzerland",
     countryCode: "switzerland",
@@ -47,7 +45,6 @@ const branches = [
     description: "Full-service location in sunny Zabbar",
     address: "67, St. James Street",
     location: "Zabbar ZBR 1401, Malta",
-    phone: "+356 21 234 567",
     hours: ["Mon-Fri: 9:00 AM - 5:00 PM", "Sat: 9:00 AM - 12:00 PM"],
     mapsQuery: "67, St. James Street, Zabbar ZBR 1401, Malta",
     countryCode: "malta",
@@ -67,7 +64,6 @@ const branches = [
     description: "For mail handling and administrative inquiries",
     address: "P.O. Box 174",
     location: "Leeds LS1 1EL, United Kingdom",
-    phone: "+44 113 123 4567",
     hours: ["Mon-Fri: 9:00 AM - 5:00 PM"],
     mapsQuery: "P.O. Box 174, Leeds LS1 1EL, United Kingdom",
     countryCode: "uk",
@@ -93,7 +89,7 @@ function BranchCard({ branch }: { branch: Branch }) {
           </div>
           <div className="flex items-start">
             <Phone className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />
-            <p>{branch.phone}</p>
+            
           </div>
           <div className="flex items-start">
             <Clock className="h-5 w-5 text-yellow-500 mr-2 shrink-0" />

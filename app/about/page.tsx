@@ -127,7 +127,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/ceojpg?height=160&width=160" alt="CEO" fill className="object-cover" />
+                <Image src="/ceo.jpg?height=160&width=160" alt="CEO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Robert Johnson</h3>
               <p className="text-green-700 font-medium mb-2">Chief Executive Officer</p>
@@ -175,7 +175,7 @@ export default function AboutPage() {
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/placeholder.svg?height=160&width=160" alt="CCO" fill className="object-cover" />
+                <Image src="/cco.jpg?height=160&width=160" alt="CCO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">James Thompson</h3>
               <p className="text-green-700 font-medium mb-2">Chief Credit Officer</p>
@@ -187,7 +187,7 @@ export default function AboutPage() {
 
             <div className="text-center">
               <div className="mx-auto w-40 h-40 bg-gray-200 rounded-full mb-4 overflow-hidden relative">
-                <Image src="/cmo.jpg?height=160&width=160" alt="CMO" fill className="object-cover" />
+                <Image src="/cmmo.jpg?height=160&width=160" alt="CMO" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold">Lisa Patel</h3>
               <p className="text-green-700 font-medium mb-2">Chief Marketing Officer</p>

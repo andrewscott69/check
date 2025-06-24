@@ -6,7 +6,7 @@ import { Search, Info, LogIn, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useState } from "react"
+// import { useState } from "react"
 
 export function SiteHeader() {
   // const [activeTab, setActiveTab] = useState("personal")

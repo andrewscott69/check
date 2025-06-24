@@ -1,4 +1,3 @@
-// lib/countries.ts
 export const countries = [
     "Afghanistan",
     "Albania",

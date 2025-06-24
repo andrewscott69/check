@@ -426,7 +426,7 @@ export default function OnlineBankingPage() {
                   Get help with online banking features, troubleshooting, and account access.
                 </p>
                 <div className="space-y-2">
-                  <p className="font-medium">Phone: (800) 555-1234</p>
+{/*                   <p className="font-medium">Phone: (800) 555-1234</p> */}
                   <p className="text-gray-600">Available 24/7</p>
                 </div>
               </CardContent>
@@ -473,11 +473,12 @@ export default function OnlineBankingPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-              Enroll in Online Banking <ChevronRight className="ml-1 h-4 w-4" />
+               <Link href="/u/signup">
+                        Enroll in Online Banking <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>  
+              
             </Button>
-            <Button size="lg" variant="outline" className="bg-white text-green-900 hover:bg-gray-100 font-medium">
-              Download Mobile App <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
+            
           </div>
         </div>
       </section>

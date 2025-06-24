@@ -71,6 +71,7 @@ export const countries = [
     "Guyana",
     "Haiti",
     "Honduras",
+    "Hong Kong",
     "Hungary",
     "Iceland",
     "India",

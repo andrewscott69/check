@@ -284,7 +284,7 @@ export default function Page() {
                   <div className="bg-white p-6 rounded-md shadow-sm">
                     <h4 className="text-lg font-medium mb-2">Contact Us</h4>
                     <p className="text-gray-600 mb-4">Our team is available to assist you with any questions.</p>
-                    <p className="font-medium">Phone: (800) 555-1234</p>
+{/*                     <p className="font-medium">Phone: (800) 555-1234</p> */}
                     <p className="text-gray-600">Monday-Friday: 8am-8pm</p>
                     <p className="text-gray-600">Saturday: 9am-1pm</p>
                   </div>
@@ -529,7 +529,7 @@ export default function Page() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6 italic">
-                "Horizon Banking has transformed how I manage my finances. Their mobile app is intuitive, and their
+                "Silver Crest Bank has transformed how I manage my finances. Their mobile app is intuitive, and their
                 customer service team is always ready to help. I've been a customer for over 5 years and couldn't be
                 happier."
               </p>
@@ -548,7 +548,7 @@ export default function Page() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6 italic">
-                "As a small business owner, I needed a bank that understood my unique challenges. Horizon Banking
+                "As a small business owner, I needed a bank that understood my unique challenges. Silver Crest Bank
                 provided tailored solutions that helped my business grow. Their business advisors are knowledgeable and
                 supportive."
               </p>
@@ -567,7 +567,7 @@ export default function Page() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6 italic">
-                "The wealth management team at Horizon Banking helped me create a comprehensive retirement plan. Their
+                "The wealth management team at Silver Crest Bank helped me create a comprehensive retirement plan. Their
                 expertise and personalized approach gave me confidence in my financial future."
               </p>
               <div>

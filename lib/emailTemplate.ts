@@ -25,8 +25,8 @@ export function generateEmailTemplate({
           <td align="center">
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
               <tr>
-                <td style="background-color: #4F46E5; padding: 24px 40px;">
-                  <img src="https://yourdomain.com/logo.png" alt="BankApp Logo" height="40" style="display:block; margin: 0 auto;" />
+                <td style="background-color: #F59E0B; padding: 24px 40px;">
+                  <img src="https://silvercrest-eta.vercel.app/Silver-Crest-BW.png" alt="Silver Crest Logo" height="40" style="display:block; margin: 0 auto;" />
                 </td>
               </tr>
               <tr>
@@ -51,13 +51,13 @@ export function generateEmailTemplate({
               <tr>
                 <td style="padding: 0 40px 32px 40px;">
                   <p style="font-size: 13px; color: #9ca3af;">
-                    ${footerNote || "If you did not request this, please ignore this email."}
+                    ${footerNote || "If you did not request this, contact support or please ignore this email."}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td style="text-align: center; font-size: 12px; color: #9ca3af; padding: 24px;">
-                  &copy; ${new Date().getFullYear()} BankApp. All rights reserved.
+                  &copy; ${new Date().getFullYear()} Silver Crest. All rights reserved.
                 </td>
               </tr>
             </table>

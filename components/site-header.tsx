@@ -106,20 +106,11 @@ export function SiteHeader() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <Link href="/personal-banking" className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md">
-                    Personal Banking
-                  </Link>
-                  <Link href="/business-banking" className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md">
-                    Business Banking
-                  </Link>
-                  <Link
-                    href="/wealth-management"
-                    className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md"
-                  >
-                    Wealth Management
+                  <Link href="/u/login" className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md">
+                    Log In
                   </Link>
                   <Link href="/u/signup" className="text-lg font-medium px-2 py-2 hover:bg-gray-100 rounded-md">
-                    Log In
+                   Sign Up
                   </Link>
                 </nav>
               </SheetContent>

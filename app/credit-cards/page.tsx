@@ -26,7 +26,10 @@ export default function CreditCardsPage() {
               with our range of credit cards.
             </p>
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-              Apply for a Card <ChevronRight className="ml-1 h-4 w-4" />
+              <Link href="/u/login">
+                  Apply for a Card <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              
             </Button>
           </div>
         </div>

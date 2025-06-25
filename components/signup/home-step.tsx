@@ -77,7 +77,7 @@ export default function HomeStep({ onNext, notify }: SignupStepProps) {
         {/* Image First on Mobile */}
         <div className="flex justify-center">
           <Image
-            src="/signup-bg.jpg?height=400&width=400"
+            src="/aboutus.jpg?height=400&width=400"
             alt="Secure banking illustration"
             width={400}
             height={400}

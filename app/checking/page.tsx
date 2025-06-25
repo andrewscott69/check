@@ -25,7 +25,10 @@ export default function CheckingPage() {
               fit your needs.
             </p>
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-                Checking Accounts
+                <Link href="/u/login">
+                  Checking Accounts
+                </Link>
+                
                </Button>
           </div>
         </div>

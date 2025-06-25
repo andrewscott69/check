@@ -29,7 +29,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM || `"BankApp" <${process.env.EMAIL_SERVER_USER}>`,
     to: email,
-    subject: "Verify your email address",
+    subject: "Verify your Account",
     html,
   })
 }
@@ -55,7 +55,7 @@ export async function sendEmail({
   const html = generateEmailTemplate({ title, message, ctaText, ctaUrl, footerNote })
 
   await transporter.sendMail({
-    from: process.env.EMAIL_FROM || `"BankApp" <${process.env.EMAIL_SERVER_USER}>`,
+    from: process.env.EMAIL_FROM || `"Silver Crest" <${process.env.EMAIL_SERVER_USER}>`,
     to,
     subject,
     html,

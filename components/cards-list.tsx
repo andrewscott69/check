@@ -1,9 +1,7 @@
 "use client"
 
-import type React from "react"
-
-import { CreditCard, Eye, EyeOff, MoreHorizontal, Plus } from "lucide-react"
 import { useState, useRef } from "react"
+import { CreditCard, Eye, EyeOff, MoreHorizontal, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { AddCardModal } from "./add-card-modal" 
 
 interface CardType {
   id: string
@@ -28,7 +27,6 @@ interface CardsListProps {
   expanded?: boolean
 }
 
-// Add this style block for the clip path
 const styles = `
   .clip-wallet-card {
     clip-path: polygon(0 15%, 100% 15%, 100% 100%, 0% 100%);
@@ -57,13 +55,8 @@ function DraggableCard({
   const [isDragging, setIsDragging] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const maskCardNumber = (number: string) => {
-    return `•••• •••• •••• ${number.slice(-4)}`
-  }
-
-  const formatCardNumber = (number: string) => {
-    return number.replace(/(.{4})/g, "$1 ").trim()
-  }
+  const maskCardNumber = (number: string) => `•••• •••• •••• ${number.slice(-4)}`
+  const formatCardNumber = (number: string) => number.replace(/(.{4})/g, "$1 ").trim()
 
   const getCardGradient = (color?: string) => {
     switch (color) {
@@ -118,15 +111,11 @@ function DraggableCard({
 
     const handleMouseUp = () => {
       setIsDragging(false)
-
-      // Check if card is dragged far enough to be "pulled out"
       if (Math.abs(dragPosition.x) > 100 || Math.abs(dragPosition.y) > 100) {
         onDragEnd()
       } else {
-        // Snap back to wallet
         setDragPosition({ x: 0, y: 0 })
       }
-
       document.removeEventListener("mousemove", handleMouseMove)
       document.removeEventListener("mouseup", handleMouseUp)
     }
@@ -142,9 +131,9 @@ function DraggableCard({
         }`,
         zIndex: isDragged ? 50 : 10 + index,
         transition: isDragging ? "none" : "all 0.3s ease",
-        opacity: isStacked ? 0.95 : 1, // Slightly dim cards in wallet
-        height: isStacked ? "85%" : "100%", // Make cards in wallet slightly shorter to enhance "inside" look
-        boxShadow: isStacked ? "0 -2px 5px rgba(0,0,0,0.2)" : "", // Shadow at top of card for depth
+        opacity: 0.95,
+        height: "85%",
+        boxShadow: "0 -2px 5px rgba(0,0,0,0.2)",
       }
     : {
         transform: "none",
@@ -161,12 +150,9 @@ function DraggableCard({
       style={cardStyle}
       onMouseDown={handleMouseDown}
     >
-      {/* Card background pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-xl" />
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16" />
-
       <div className="relative z-10 flex flex-col h-full">
-        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm font-medium opacity-90">{card.name}</div>
           {!isStacked && (
@@ -194,16 +180,12 @@ function DraggableCard({
             </div>
           )}
         </div>
-
-        {/* Card number */}
         <div className="flex-1 flex flex-col justify-center">
           <div className="text-lg font-mono tracking-wider mb-2">
             {showNumber ? formatCardNumber(card.number) : maskCardNumber(card.number)}
           </div>
           {!isStacked && <div className="text-sm opacity-75 mb-2">Balance: $2,450.00</div>}
         </div>
-
-        {/* Footer */}
         <div className="flex items-end justify-between">
           <div className="text-sm">
             <div className="opacity-75 text-xs">EXPIRES</div>
@@ -212,8 +194,6 @@ function DraggableCard({
           <div className="flex items-center">{getCardIcon(card.type)}</div>
         </div>
       </div>
-
-      {/* Drag hint for stacked cards */}
       {isStacked && !isDragging && (
         <div className="absolute inset-0 bg-black/0 hover:bg-black/10 rounded-xl transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
           <div className="text-white/80 text-sm font-medium">Drag to use</div>
@@ -226,6 +206,7 @@ function DraggableCard({
 export function CardsList({ cards = [], expanded = false }: CardsListProps) {
   const [draggedCard, setDraggedCard] = useState<string | null>(null)
   const [pulledCards, setPulledCards] = useState<Set<string>>(new Set())
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleDragStart = (cardId: string) => {
     setDraggedCard(cardId)
@@ -246,57 +227,36 @@ export function CardsList({ cards = [], expanded = false }: CardsListProps) {
     })
   }
 
-  // If no cards, show the empty state
-  if (cards.length === 0) {
-    return (
-      <div className="relative flex flex-col items-center justify-center  p-10 text-center backdrop-blur-sm transition-all duration-300 hover:border-gray-300/80 hover:shadow-lg hover:shadow-gray-100/50">
-        {/* Background decoration */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20" />
-
-        {/* Main content - all centered */}
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gray-100 to-gray-200/80 shadow-sm mb-3 transition-transform duration-300 hover:scale-105">
-            <CreditCard className="h-6 w-6 text-gray-500" />
-          </div>
-
-          <h3 className="text-sm font-semibold text-gray-900 mb-1">No cards added yet</h3>
-          <p className="text-xs text-gray-600 mb-4">Start by adding your first card</p>
-
-          <Button size="sm" className="gap-1.5">
-            <Plus className="h-4 w-4" />
-            Add card
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   const stackedCards = cards.filter((card) => !pulledCards.has(card.id))
   const pulledCardsArray = cards.filter((card) => pulledCards.has(card.id))
 
-  // If there are cards, show the wallet with draggable cards
   return (
     <div className="space-y-8">
       <style jsx>{styles}</style>
 
+      <AddCardModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onCardAdded={() => {
+          setIsModalOpen(false)
+          // Optional: trigger refresh or fetch cards again
+        }}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Your Wallet</h2>
-        <Button size="sm" className="gap-1.5">
+        <Button size="sm" className="gap-1.5" onClick={() => setIsModalOpen(true)}>
           <Plus className="h-4 w-4" />
           Add Card
         </Button>
       </div>
 
-      {/* Wallet with stacked cards */}
+      {/* Wallet section */}
       <div className="relative mx-auto w-80 h-64">
-        {/* Wallet back layer (bottom) */}
         <div className="absolute inset-0 translate-y-2 rounded-2xl bg-amber-950 shadow-2xl"></div>
-
-        {/* Wallet main body */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-800 via-amber-700 to-amber-900 shadow-2xl border border-amber-700/50 overflow-hidden">
-          {/* Leather texture overlay */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-800/30 via-transparent to-amber-950/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-800/30 via-transparent to-amber-950/50 rounded-2xl" />
           <div
             className="absolute inset-0 rounded-2xl"
             style={{
@@ -305,25 +265,18 @@ export function CardsList({ cards = [], expanded = false }: CardsListProps) {
               backgroundSize: "20px 20px",
             }}
           />
-
-          {/* Wallet stitching */}
           <div className="absolute inset-x-0 top-0 h-1 bg-amber-600/30"></div>
           <div className="absolute inset-x-0 bottom-0 h-1 bg-amber-600/30"></div>
           <div className="absolute inset-y-0 left-0 w-1 bg-amber-600/30"></div>
           <div className="absolute inset-y-0 right-0 w-1 bg-amber-600/30"></div>
-
-          {/* Wallet inner shadow for depth */}
           <div className="absolute inset-0 shadow-[inset_0_5px_15px_rgba(0,0,0,0.4)] rounded-2xl"></div>
         </div>
 
-        {/* Wallet card slots */}
         <div className="absolute top-6 left-4 right-4 bottom-4 rounded-lg bg-amber-950/30 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]">
-          {/* Card slot dividers */}
           <div className="absolute top-1/4 inset-x-0 h-px bg-amber-800/30"></div>
           <div className="absolute top-2/4 inset-x-0 h-px bg-amber-800/30"></div>
           <div className="absolute top-3/4 inset-x-0 h-px bg-amber-800/30"></div>
 
-          {/* Stacked cards inside wallet */}
           <div className="absolute top-2 left-2 right-2 bottom-2">
             {stackedCards.map((card, index) => (
               <DraggableCard
@@ -334,7 +287,7 @@ export function CardsList({ cards = [], expanded = false }: CardsListProps) {
                 isDragged={draggedCard === card.id}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                stackOffset={-index * 16} // Increased spacing between cards
+                stackOffset={-index * 16}
               />
             ))}
           </div>

@@ -166,7 +166,7 @@ const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
                 <CardDescription>Available 7 days a week</CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-2xl font-bold text-green-700 mb-2">(800) 555-1234</p>
+{/*                 <p className="text-2xl font-bold text-green-700 mb-2">(800) 555-1234</p> */}
                 <div className="space-y-1 text-gray-600">
                   <p>Monday - Friday: 7:00 AM - 10:00 PM</p>
                   <p>Saturday: 8:00 AM - 6:00 PM</p>
@@ -185,7 +185,7 @@ const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
                 <CardDescription>We'll respond within 24 hours</CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-lg font-medium text-green-700 mb-4">support@silvercrest.com</p>
+                <p className="text-lg font-medium text-green-700 mb-4">servicecenter@silvercrestbank.com</p>
                 <p className="text-gray-600">
                   For general inquiries, account questions, or technical support. Please include your account number for
                   faster service.

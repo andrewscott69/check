@@ -26,7 +26,10 @@ export default function MortgagesPage() {
               from our mortgage experts.
             </p>
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-              Get Pre-Approved <ChevronRight className="ml-1 h-4 w-4" />
+              <Link href="/u/login">
+                  Get Pre-Approved <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              
             </Button>
           </div>
         </div>

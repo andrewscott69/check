@@ -24,11 +24,9 @@ export default function CheckingPage() {
               Find the perfect checking account for your lifestyle. From students to professionals, we have options that
               fit your needs.
             </p>
-            <Link href="/u/login" className="text-gray-300 hover:text-white">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
                 Checking Accounts
                </Button>
-            </Link>
           </div>
         </div>
       </section>

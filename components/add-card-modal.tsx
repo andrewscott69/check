@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CreditCard, Check, Loader2 } from "lucide-react"
+import Image from "next/image"
 
 interface AddCardModalProps {
   open: boolean
@@ -29,41 +28,22 @@ interface CardFormData {
   cvv: string
 }
 
-// Card type detection function
+// Detect card type + UI color
 function detectCardType(cardNumber: string): { type: string; color: string } {
   const cleaned = cardNumber.replace(/\s/g, "")
-
-  // Visa: starts with 4
-  if (/^4/.test(cleaned)) {
-    return { type: "visa", color: "blue" }
-  }
-
-  // Mastercard: starts with 5 or 2221-2720
-  if (/^5[1-5]/.test(cleaned) || /^2(22[1-9]|2[3-9]|[3-6]|7[0-1]|720)/.test(cleaned)) {
-    return { type: "mastercard", color: "red" }
-  }
-
-  // American Express: starts with 34 or 37
-  if (/^3[47]/.test(cleaned)) {
-    return { type: "amex", color: "green" }
-  }
-
-  // Discover: starts with 6
-  if (/^6/.test(cleaned)) {
-    return { type: "discover", color: "purple" }
-  }
-
+  if (/^4/.test(cleaned)) return { type: "visa", color: "blue" }
+  if (/^5[1-5]/.test(cleaned) || /^2(22[1-9]|2[3-9]|[3-6]|7[0-1]|720)/.test(cleaned)) return { type: "mastercard", color: "red" }
+  if (/^3[47]/.test(cleaned)) return { type: "amex", color: "green" }
+  if (/^6/.test(cleaned)) return { type: "discover", color: "purple" }
   return { type: "unknown", color: "gray" }
 }
 
-// Format card number with spaces
 function formatCardNumber(value: string): string {
   const cleaned = value.replace(/\s/g, "")
   const match = cleaned.match(/.{1,4}/g)
   return match ? match.join(" ") : cleaned
 }
 
-// Format expiry date MM/YY
 function formatExpiryDate(value: string): string {
   const cleaned = value.replace(/\D/g, "")
   if (cleaned.length >= 2) {
@@ -79,6 +59,7 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
     expiryDate: "",
     cvv: "",
   })
+
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Partial<CardFormData>>({})
 
@@ -87,28 +68,17 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
   const validateForm = (): boolean => {
     const newErrors: Partial<CardFormData> = {}
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Card name is required"
-    }
+    if (!formData.name.trim()) newErrors.name = "Card name is required"
 
     const cleanedNumber = formData.cardNumber.replace(/\s/g, "")
-    if (!cleanedNumber) {
-      newErrors.cardNumber = "Card number is required"
-    } else if (cleanedNumber.length < 13 || cleanedNumber.length > 19) {
-      newErrors.cardNumber = "Invalid card number length"
-    }
+    if (!cleanedNumber) newErrors.cardNumber = "Card number is required"
+    else if (cleanedNumber.length < 13 || cleanedNumber.length > 19) newErrors.cardNumber = "Invalid card number length"
 
-    if (!formData.expiryDate) {
-      newErrors.expiryDate = "Expiry date is required"
-    } else if (!/^\d{2}\/\d{2}$/.test(formData.expiryDate)) {
-      newErrors.expiryDate = "Invalid expiry format (MM/YY)"
-    }
+    if (!formData.expiryDate) newErrors.expiryDate = "Expiry date is required"
+    else if (!/^\d{2}\/\d{2}$/.test(formData.expiryDate)) newErrors.expiryDate = "Invalid expiry format (MM/YY)"
 
-    if (!formData.cvv) {
-      newErrors.cvv = "CVV is required"
-    } else if (formData.cvv.length < 3 || formData.cvv.length > 4) {
-      newErrors.cvv = "Invalid CVV length"
-    }
+    if (!formData.cvv) newErrors.cvv = "CVV is required"
+    else if (formData.cvv.length < 3 || formData.cvv.length > 4) newErrors.cvv = "Invalid CVV length"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -116,32 +86,23 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!validateForm()) return
-
     setIsLoading(true)
 
     try {
       const response = await fetch("/api/cards", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           cardNumber: formData.cardNumber.replace(/\s/g, ""),
           expiryDate: formData.expiryDate,
           cvv: formData.cvv,
-          type: detectedCard.type,
-          color: detectedCard.color,
         }),
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to add card")
-      }
+      if (!response.ok) throw new Error("Failed to add card")
 
-      // Reset form and close modal
       setFormData({ name: "", cardNumber: "", expiryDate: "", cvv: "" })
       setErrors({})
       onOpenChange(false)
@@ -168,31 +129,24 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
     }
 
     setFormData((prev) => ({ ...prev, [field]: formattedValue }))
-
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
   }
 
   const getCardIcon = () => {
-    switch (detectedCard.type) {
-      case "visa":
-        return <div className="text-blue-600 font-bold text-sm">VISA</div>
-      case "mastercard":
-        return (
-          <div className="flex gap-1">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-500 rounded-full -ml-1"></div>
-          </div>
-        )
-      case "amex":
-        return <div className="text-green-600 font-bold text-sm">AMEX</div>
-      case "discover":
-        return <div className="text-purple-600 font-bold text-sm">DISC</div>
-      default:
-        return <CreditCard className="h-4 w-4 text-gray-400" />
-    }
+    const type = detectedCard.type
+    if (type === "unknown") return <CreditCard className="h-4 w-4 text-gray-400" />
+
+    return (
+      <Image
+        src={`/cards/${type}.svg`}
+        alt={`${type} logo`}
+        width={32}
+        height={20}
+        className="h-5 w-auto"
+      />
+    )
   }
 
   return (
@@ -204,7 +158,7 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
             Add New Card
           </DialogTitle>
           <DialogDescription>
-            Enter your card details below. We'll automatically detect the card type.
+            Enter your card details below. We'll detect the card type automatically.
           </DialogDescription>
         </DialogHeader>
 
@@ -213,7 +167,7 @@ export function AddCardModal({ open, onOpenChange, onCardAdded }: AddCardModalPr
             <Label htmlFor="name">Card Name</Label>
             <Input
               id="name"
-              placeholder="e.g., Personal Card, Work Card"
+              placeholder="e.g., Personal Card"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               className={errors.name ? "border-red-500" : ""}

@@ -24,9 +24,10 @@ export default function SavingsPage() {
               Grow your money with competitive rates and flexible savings options designed to help you reach your
               financial goals.
             </p>
+             <Link href="/u/login">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
               Open Savings Account <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
+            </Button></Link>
           </div>
         </div>
       </section>

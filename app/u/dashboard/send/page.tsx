@@ -837,12 +837,13 @@ export default function TransferPage() {
                       </h3>
                       <p className="text-xl font-bold mt-1">
                         $
-                        {!isNaN(Number(amount))
-                          ? Number(amount).toLocaleString("en-US", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })
-                          : "0.00"}
+                        {Number(amount.replace(/,/g, "") || 0).toLocaleString(
+                          "en-US",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}
                       </p>
                     </div>
                     <div>

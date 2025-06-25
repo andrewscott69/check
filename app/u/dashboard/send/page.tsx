@@ -232,7 +232,7 @@ export default function TransferPage() {
   if (showSuccess && transferResult) {
     return (
       <div className="flex min-h-screen flex-col">
-         <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
+        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
           <nav className="hidden md:flex  items-center justify-center gap-4">
             <Link
               href="/u/dashboard"
@@ -255,8 +255,6 @@ export default function TransferPage() {
 
           <MobileNav />
           <div className="ml-auto flex items-center gap-4">
-            
-
             <UserNav />
           </div>
         </header>
@@ -839,10 +837,12 @@ export default function TransferPage() {
                       </h3>
                       <p className="text-xl font-bold mt-1">
                         $
-                        {Number(amount || "0").toLocaleString("en-US", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
+                        {!isNaN(Number(amount))
+                          ? Number(amount).toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })
+                          : "0.00"}
                       </p>
                     </div>
                     <div>

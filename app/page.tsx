@@ -57,7 +57,7 @@ export default function Page() {
             <div className="flex items-center justify-center py-4 px-6 border-r border-green-800">
               <div>
                 <p className="text-sm font-medium">Swift/BIC Code:</p>
-                <p className="font-bold">SCB-30500913</p>
+                <p className="font-bold">SCBXX7710537</p>
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 py-4 px-6">

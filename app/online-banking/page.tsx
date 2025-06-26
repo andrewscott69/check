@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { ChevronRight, Check, Smartphone, Shield, CreditCard, Clock, Bell, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"

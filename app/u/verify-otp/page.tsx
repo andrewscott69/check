@@ -114,46 +114,37 @@ export default function VerifyOtpPage() {
       toast.error("Missing email or status. Please restart verification.");
       return router.push("/u/login");
     }
-
+  
     if (otpValue.length !== 6) return toast.error("Please enter all 6 digits");
     setIsLoading(true);
-
+  
     try {
       const response = await fetch("/api/auth/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue, status }),
       });
-
+  
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Verification failed");
-
+  
       if (status === "transfer") {
         const transferData = sessionStorage.getItem("transferData");
         if (!transferData) throw new Error("Missing transfer data");
-
+  
+     
         const parsed = JSON.parse(transferData);
         parsed.status = "verified";
-
-        const transferRes = await fetch("/api/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsed),
-        });
-
-        const transferResult = await transferRes.json();
-        if (!transferRes.ok)
-          throw new Error(transferResult.error || "Transfer failed");
-
-        toast.success("Transfer successful");
-        sessionStorage.removeItem("transferData");
+        sessionStorage.setItem("transferData", JSON.stringify(parsed));
+  
+       
       }
-
+  
       setIsVerified(true);
       sessionStorage.removeItem("verificationEmail");
       sessionStorage.removeItem("verificationStatus");
       toast.success("Verified successfully");
-
+  
       setTimeout(() => {
         if (status === "login") router.push("/u/dashboard");
         else if (status === "transfer") router.push("/u/dashboard/send");
@@ -165,6 +156,7 @@ export default function VerifyOtpPage() {
       setIsLoading(false);
     }
   };
+  
 
   const handleResendOtp = async () => {
     if (!canResend || !email || !status) return;

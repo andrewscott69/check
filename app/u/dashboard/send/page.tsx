@@ -1,25 +1,16 @@
 "use client";
 
-import type React from "react";
-import { useRouter } from "next/navigation";
-
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { countries } from "@/lib/countries";
-import { MobileNav } from "@/components/mobile-nav";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Building,
-  CreditCard,
+  CheckCircle2,
   DollarSign,
-  Globe,
-  Info,
-  Landmark,
-  User,
-  CheckCircle,
-  Bell,
+  Loader2,
+  Mail,
+  Phone,
 } from "lucide-react";
-import { UserNav } from "@/components/user-nav";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,887 +22,328 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { TransactionStatusCard } from "@/components/transcation-status-card";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-interface BankAccount {
-  id: string;
-  accountNumber: string;
-  routingNumber: string;
-  accountType: string;
-  accountName: string;
-  balance: number;
-  availableBalance: number;
-  status: string;
-  currencyType: string;
-  interestRate: number;
-  overdraftLimit: number;
-  hasOverdraftProtection: boolean;
-  minimumBalance: number;
-  openedAt: string;
+function maskPhoneNumber(phone: string) {
+  const cleaned = phone.replace(/\D/g, "");
+  const last4 = cleaned.slice(-4);
+  return `+***-***-${last4}`;
 }
 
-interface Recipient {
-  id: string;
-  name: string;
-  accountNumber: string;
-  lastUsed: string;
-}
-
-interface TransferResult {
-  success: boolean;
-  transactionId: string;
-  message: string;
-  details: {
-    amount: number;
-    fee: number;
-    total: number;
-    transferType: string;
-    recipient: string;
-    estimatedArrival: string;
-    status: string;
-    requiresApproval: boolean;
-    isApproved: boolean;
-  };
-}
-
-export default function TransferPage() {
-  const [transferType, setTransferType] = useState("local");
-  const [amount, setAmount] = useState("");
-  const [showSummary, setShowSummary] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [accounts, setAccounts] = useState<BankAccount[]>([]);
-  const [recipients, setRecipients] = useState<Recipient[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const [selectedRecipient, setSelectedRecipient] = useState("");
-  const [recipientType, setRecipientType] = useState("existing");
-  const [loading, setLoading] = useState(false);
-  const [transferResult, setTransferResult] = useState<TransferResult | null>(
+export default function VerifyOtpPage() {
+  const router = useRouter();
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [isLoading, setIsLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const [email, setEmail] = useState("");
+  const [maskedPhone, setMaskedPhone] = useState<string | null>(null);
+  const [status, setStatus] = useState<"signup" | "login" | "transfer" | null>(
     null
   );
+  const [isVerified, setIsVerified] = useState(false);
 
-  const router = useRouter();
-  const userEmail =
-    typeof window !== "undefined" ? localStorage.getItem("userEmail") : "";
-
-  const [formData, setFormData] = useState({
-    recipientName: "",
-    accountNumber: "",
-    routingNumber: "",
-    swiftCode: "",
-    iban: "",
-    bankName: "",
-    bankAddress: "",
-    country: "",
-    currency: "USD",
-    intermediaryBank: "",
-    reference: "",
-    note: "",
-    transferDate: "now",
-  });
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    fetchAccounts();
-  }, []);
+    const storedEmail = sessionStorage.getItem("verificationEmail");
+    const storedStatus = sessionStorage.getItem("verificationStatus");
 
-  const fetchAccounts = async () => {
-    try {
-      const response = await fetch("/api/dashboard");
-      const data = await response.json();
-      if (data.bankAccounts) {
-        setAccounts(data.bankAccounts);
-        if (data.bankAccounts.length > 0) {
-          setSelectedAccount(data.bankAccounts[0].id);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching accounts:", error);
-    }
-  };
+    if (!storedEmail || !storedStatus) {
+      toast.error("Verification session expired. Please login again.");
+      router.push("/u/login");
+    } else {
+      setEmail(storedEmail);
+      setStatus(storedStatus as "signup" | "login" | "transfer");
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleContinue = () => {
-    setShowSummary(true);
-  };
-
-  const handleBack = () => {
-    setShowSummary(false);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const selectedAccountData = accounts.find(
-      (acc) => acc.id === selectedAccount
-    );
-
-    const transferData = {
-      transferType,
-      fromAccountId: selectedAccount,
-      amount: Number.parseFloat(amount),
-      recipientData: {
-        name: formData.recipientName,
-        accountNumber: formData.accountNumber,
-        routingNumber: formData.routingNumber,
-        swiftCode: formData.swiftCode,
-        iban: formData.iban,
-        bankName: formData.bankName,
-        bankAddress: formData.bankAddress,
-        country: formData.country,
-        currency: formData.currency,
-        intermediaryBank: formData.intermediaryBank,
-      },
-      reference: formData.reference,
-      note: formData.note,
-      scheduledDate: formData.transferDate,
-      status: "unverified",
-    };
-
-    try {
-      const res = await fetch("/api/send", {
+      fetch("/api/auth/get-phone", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transferData),
+        body: JSON.stringify({ email: storedEmail }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.phone) {
+            setMaskedPhone(maskPhoneNumber(data.phone));
+          }
+        })
+        .catch(() => toast.error("Unable to retrieve phone number"));
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+    setCanResend(true);
+  }, [timeLeft]);
+
+  const handleChange = (index: number, value: string) => {
+    if (!/^[0-9]?$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
+  };
+
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text/plain").trim();
+    if (/^\d{6}$/.test(pasted)) {
+      setOtp(pasted.split(""));
+      inputRefs.current[5]?.focus();
+    }
+  };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const otpValue = otp.join("");
+    if (!email || !status) {
+      toast.error("Missing email or status. Please restart verification.");
+      return router.push("/u/login");
+    }
+  
+    if (otpValue.length !== 6) return toast.error("Please enter all 6 digits");
+    setIsLoading(true);
+  
+    try {
+      const response = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: otpValue, status }),
+      });
+  
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Verification failed");
+  
+      if (status === "transfer") {
+        const transferData = sessionStorage.getItem("transferData");
+        if (!transferData) throw new Error("Missing transfer data");
+  
+     
+        const parsed = JSON.parse(transferData);
+        parsed.status = "verified";
+        sessionStorage.setItem("transferData", JSON.stringify(parsed));
+  
+       
+      }
+  
+      setIsVerified(true);
+      sessionStorage.removeItem("verificationEmail");
+      sessionStorage.removeItem("verificationStatus");
+      toast.success("Verified successfully");
+  
+      setTimeout(() => {
+        if (status === "login") router.push("/u/dashboard");
+        else if (status === "transfer") router.push("/u/dashboard/send");
+        else router.push("/u/login");
+      }, 2000);
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
+  const handleResendOtp = async () => {
+    if (!canResend || !email || !status) return;
+    setCanResend(false);
+    setTimeLeft(60);
+
+    try {
+      const response = await fetch("/api/auth/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, status }),
       });
 
-      const result = await res.json();
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.error || "Failed to resend code");
 
-      if (result.success && result.status === "transfer") {
-        // Save session for OTP verification page
-        sessionStorage.setItem("transferData", JSON.stringify(transferData));
-        sessionStorage.setItem("verificationEmail", result.email);
-        sessionStorage.setItem("verificationStatus", "transfer");
-
-        router.push("/u/verify-otp");
-      } else {
-        alert(result.error || "Transfer failed.");
-      }
-    } catch (error) {
-      console.error("Transfer submit error:", error);
-      alert("Something went wrong.");
-    } finally {
-      setLoading(false);
+      toast.success("A new verification code has been sent to your Authentication Device.");
+    } catch (error: any) {
+      toast.error("Resend failed", { description: error.message });
+      setCanResend(true);
     }
   };
 
-  const getFee = () => {
-    switch (transferType) {
-      case "local":
-        return 0;
-      case "international":
-        return 15;
-      case "wire":
-        return 35;
-      default:
-        return 0;
-    }
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
-  const getTotal = () => {
-    const amt = Number.parseFloat(amount) || 0;
-    return amt + getFee();
-  };
-
-  if (showSuccess && transferResult) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-slate-900 text-white px-4 md:px-6">
-          <nav className="hidden md:flex  items-center justify-center gap-4">
-            <Link
-              href="/u/dashboard"
-              className="flex items-center justify-center"
-            >
-              <Image
-                src="/Silver-Crest-BW.png"
-                alt="Silver Crest Logo"
-                width={80}
-                height={80}
-              />
-            </Link>
-            <Link
-              href="/u/dashboard"
-              className="text-sm font-medium text-white"
-            >
-              Dashboard
-            </Link>
-          </nav>
-
-          <MobileNav />
-          <div className="ml-auto flex items-center gap-4">
-            <UserNav />
-          </div>
-        </header>
-        <main className="flex-1 bg-slate-50 p-4 md:p-8">
-          <div className="mx-auto max-w-2xl space-y-6">
-            {transferResult && transferResult.details && (
-              <TransactionStatusCard
-                transaction={{
-                  id: transferResult.transactionId,
-                  amount: transferResult.details.amount,
-                  fee: transferResult.details.fee,
-                  status: transferResult.details.status,
-                  transferType: transferResult.details.transferType,
-                  recipient: transferResult.details.recipient,
-                  estimatedArrival: transferResult.details.estimatedArrival,
-                  requiresApproval: transferResult.details.requiresApproval,
-                  createdAt: new Date().toISOString(),
-                }}
-              />
-            )}
-
-            <Card className="border-0 shadow-md">
-              <CardContent className="pt-6 text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <h2 className="mb-2 text-xl font-semibold">
-                  Transfer Initiated
-                </h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {transferResult.message}
-                </p>
-
-                {transferResult.details.requiresApproval && (
-                  <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800">
-                    <p className="text-sm font-medium">⏳ Status: pending...</p>
-                    <p className="text-xs">
-                      Large transfers require security review.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="flex flex-col space-y-2">
-                <Button asChild className="w-full">
-                  <Link href="/u/dashboard">Return to Dashboard</Link>
-                </Button>
-                <Button variant="outline" asChild className="w-full">
-                  <Link href="/u/transactions">View Transaction History</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  // Rest of the component remains the same as your original code...
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className=" flex h-16 items-center justify-between border-b bg-slate-900 px-4 md:px-6">
-        <Link href="/u/dashboard" className="flex items-center gap-2">
-          <Image
-            src="/Silver-Crest-BW.png"
-            alt="Silver Crest Logo"
-            width={90}
-            height={90}
-            className="object-contain"
-          />
-          {/* Optional: add brand name */}
-          {/* <span className="text-white text-lg font-semibold">Silver Crest</span> */}
-        </Link>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-white p-4 md:p-8">
+      <Link
+        href="/"
+        className="mb-8 flex items-center gap-2 text-2xl font-bold text-slate-900"
+      >
+        <Image src="/Silver-Crest.png" alt="Silver Crest Logo" width={90} height={90} />
+        
+      </Link>
 
-        <div className="flex items-center gap-4">
-          {/* <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full border-black text-amber-500 hover:text-amber-600"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Button> */}
-          <UserNav />
-        </div>
-      </header>
-
-      <main className="flex-1 bg-slate-50 p-4 md:p-8">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-6 flex items-center">
-            <Button variant="ghost" size="icon" asChild className="mr-2">
-              <Link href="/u/dashboard">
-                <ArrowLeft className="h-4 w-4" />
+      <Card className="mx-auto w-full max-w-md overflow-hidden border-none shadow-xl">
+        {isVerified ? (
+          <div className="flex flex-col items-center justify-center p-10 text-center">
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-green-600">
+              <CheckCircle2 className="h-10 w-10" />
+            </div>
+            <h2 className="mb-3 text-2xl font-bold text-slate-900">
+              {status === "transfer"
+                ? "Transaction Confirmed!"
+                : "Account Verified!"}
+            </h2>
+            <p className="mb-6 text-slate-500">
+              {status === "signup"
+                ? "Redirecting you to login..."
+                : status === "transfer"
+                ? "Redirecting to transactions..."
+                : "Redirecting to dashboard..."}
+            </p>
+            <Button asChild size="lg" className="w-full">
+              <Link
+                href={
+                  status === "signup"
+                    ? "/u/login"
+                    : status === "transfer"
+                    ? "/u/dashboard/send"
+                    : "/u/dashboard"
+                }
+              >
+                Go
               </Link>
             </Button>
-            <h1 className="text-2xl font-bold">Money Transfer</h1>
           </div>
-
-          {!showSummary ? (
-            <Card className="border-0 shadow-md">
-              <CardHeader className="bg-white rounded-t-lg border-b pb-2">
-                <CardTitle>Transfer Funds</CardTitle>
-                <CardDescription>
-                  Send money locally or internationally
-                </CardDescription>
-              </CardHeader>
-              <Tabs
-                defaultValue="local"
-                className="w-full"
-                onValueChange={setTransferType}
-              >
-                <div className="px-6 pt-4">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="local">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      Local Transfer
-                    </TabsTrigger>
-                    <TabsTrigger value="international">
-                      <Globe className="mr-2 h-4 w-4" />
-                      International
-                    </TabsTrigger>
-                    <TabsTrigger value="wire">
-                      <Landmark className="mr-2 h-4 w-4" />
-                      Wire Transfer
-                    </TabsTrigger>
-                  </TabsList>
+        ) : (
+          <>
+            <CardHeader className="space-y-4 pb-6 pt-8">
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="mr-2 rounded-full"
+                >
+                  <Link href="/u/login">
+                    <ArrowLeft className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <CardTitle className="text-2xl font-bold text-slate-900">
+                  {status === "transfer"
+                    ? "Confirm Transaction"
+                    : "Verify Account"}
+                </CardTitle>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg bg-slate-50 p-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Phone className="h-5 w-5" />
                 </div>
-
-                <CardContent className="pt-6">
-                  <form>
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="from-account">From Account</Label>
-                          <Select
-                            value={selectedAccount}
-                            onValueChange={setSelectedAccount}
-                          >
-                            <SelectTrigger id="from-account">
-                              <SelectValue placeholder="Select account" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {accounts.map((account) => (
-                                <SelectItem key={account.id} value={account.id}>
-                                  {account.accountName} (*
-                                  {account.accountNumber.slice(-4)}) - $
-                                  {account.availableBalance.toLocaleString(
-                                    "en-US",
-                                    {
-                                      minimumFractionDigits: 2,
-                                      maximumFractionDigits: 2,
-                                    }
-                                  )}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="amount">Amount</Label>
-                          <div className="relative">
-                            <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                              id="amount"
-                              placeholder="0.00"
-                              className="pl-9"
-                              value={amount}
-                              onChange={(e) => {
-                                const rawValue = e.target.value.replace(
-                                  /,/g,
-                                  ""
-                                );
-                                // Only allow numbers and decimals
-                                if (/^\d*\.?\d{0,2}$/.test(rawValue)) {
-                                  const [integer, decimal] =
-                                    rawValue.split(".");
-                                  const formattedInteger =
-                                    Number(integer).toLocaleString("en-US");
-                                  const formatted =
-                                    decimal !== undefined
-                                      ? `${formattedInteger}.${decimal}`
-                                      : formattedInteger;
-                                  setAmount(formatted);
-                                }
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <TabsContent value="local" className="mt-0 space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="recipient-name">Recipient Name</Label>
-                          <Input
-                            id="recipient-name"
-                            placeholder="Full name"
-                            value={formData.recipientName}
-                            onChange={(e) =>
-                              handleInputChange("recipientName", e.target.value)
-                            }
-                          />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="account-number">
-                              Account Number
-                            </Label>
-                            <Input
-                              id="account-number"
-                              placeholder="Enter account number"
-                              value={formData.accountNumber}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  "accountNumber",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="routing-number">
-                              Routing Number
-                            </Label>
-                            <Input
-                              id="routing-number"
-                              placeholder="Enter routing number"
-                              value={formData.routingNumber}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  "routingNumber",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent
-                        value="international"
-                        className="mt-0 space-y-4"
-                      >
-                        <div className="space-y-2">
-                          <Label htmlFor="recipient-name-intl">
-                            Recipient Name
-                          </Label>
-                          <Input
-                            id="recipient-name-intl"
-                            placeholder="Full name as it appears on the account"
-                            value={formData.recipientName}
-                            onChange={(e) =>
-                              handleInputChange("recipientName", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="recipient-country">
-                              Recipient Country
-                            </Label>
-                            <Select
-                              value={formData.country}
-                              onValueChange={(value) =>
-                                handleInputChange("country", value)
-                              }
-                            >
-                              <SelectTrigger id="recipient-country">
-                                <SelectValue placeholder="Select country" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {countries.map((country) => (
-                                  <SelectItem key={country} value={country}>
-                                    {country}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="currency">Currency</Label>
-                            <Select
-                              value={formData.currency}
-                              onValueChange={(value) =>
-                                handleInputChange("currency", value)
-                              }
-                            >
-                              <SelectTrigger id="currency">
-                                <SelectValue placeholder="Select currency" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="USD">
-                                  USD - US Dollar
-                                </SelectItem>
-                                <SelectItem value="EUR">EUR - Euro</SelectItem>
-                                <SelectItem value="GBP">
-                                  GBP - British Pound
-                                </SelectItem>
-                                <SelectItem value="CAD">
-                                  CAD - Canadian Dollar
-                                </SelectItem>
-                                <SelectItem value="JPY">
-                                  JPY - Japanese Yen
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="swift-code">SWIFT/BIC Code</Label>
-                          <Input
-                            id="swift-code"
-                            placeholder="Enter SWIFT or BIC code"
-                            value={formData.swiftCode}
-                            onChange={(e) =>
-                              handleInputChange("swiftCode", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="iban">IBAN/Account Number</Label>
-                          <Input
-                            id="iban"
-                            placeholder="Enter IBAN or account number"
-                            value={formData.iban}
-                            onChange={(e) =>
-                              handleInputChange("iban", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-800">
-                          <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm">
-                            International transfers typically take 1-3 business
-                            days and may incur additional fees from intermediary
-                            banks.
-                          </p>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="wire" className="mt-0 space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="wire-recipient">Recipient Name</Label>
-                          <Input
-                            id="wire-recipient"
-                            placeholder="Full legal name"
-                            value={formData.recipientName}
-                            onChange={(e) =>
-                              handleInputChange("recipientName", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="recipient-bank">
-                              Recipient Bank
-                            </Label>
-                            <Input
-                              id="recipient-bank"
-                              placeholder="Bank name"
-                              value={formData.bankName}
-                              onChange={(e) =>
-                                handleInputChange("bankName", e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="recipient-bank-address">
-                              Bank Address
-                            </Label>
-                            <Input
-                              id="recipient-bank-address"
-                              placeholder="Bank address"
-                              value={formData.bankAddress}
-                              onChange={(e) =>
-                                handleInputChange("bankAddress", e.target.value)
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="wire-account">Account Number</Label>
-                            <Input
-                              id="wire-account"
-                              placeholder="Enter account number"
-                              value={formData.accountNumber}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  "accountNumber",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="wire-routing">
-                              ABA/Routing Number
-                            </Label>
-                            <Input
-                              id="wire-routing"
-                              placeholder="Enter routing number"
-                              value={formData.routingNumber}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  "routingNumber",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="intermediary-bank">
-                            Intermediary Bank (Optional)
-                          </Label>
-                          <Input
-                            id="intermediary-bank"
-                            placeholder="Intermediary bank name if applicable"
-                            value={formData.intermediaryBank}
-                            onChange={(e) =>
-                              handleInputChange(
-                                "intermediaryBank",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="reference">
-                            Reference Code/Message
-                          </Label>
-                          <Input
-                            id="reference"
-                            placeholder="Reference for recipient"
-                            value={formData.reference}
-                            onChange={(e) =>
-                              handleInputChange("reference", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-800">
-                          <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm">
-                            Wire transfers typically incur a $25-$50 fee and may
-                            take 1-2 business days to process.
-                          </p>
-                        </div>
-                      </TabsContent>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="transfer-date">Transfer Date</Label>
-                        <Select
-                          value={formData.transferDate}
-                          onValueChange={(value) =>
-                            handleInputChange("transferDate", value)
-                          }
-                        >
-                          <SelectTrigger id="transfer-date">
-                            <SelectValue placeholder="Select date" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="now">Send Now</SelectItem>
-                            <SelectItem value="today">Later Today</SelectItem>
-                            <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                            <SelectItem value="custom">
-                              Schedule for Later
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="note">Note (Optional)</Label>
-                        <Textarea
-                          id="note"
-                          placeholder="Add a note or reference for this transfer"
-                          value={formData.note}
-                          onChange={(e) =>
-                            handleInputChange("note", e.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </form>
-                </CardContent>
-
-                <CardFooter className="flex flex-col space-y-2 border-t pt-4 mt-2">
-                  <Button
-                    className="w-full bg-amber-500"
-                    onClick={handleContinue}
-                    disabled={!amount || !selectedAccount}
-                  >
-                    Continue
-                  </Button>
-                  <Button variant="outline" asChild className="w-full">
-                    <Link href="/dashboard">Cancel</Link>
-                  </Button>
-                </CardFooter>
-              </Tabs>
-            </Card>
-          ) : (
-            <Card className="border-0 shadow-md">
-              <CardHeader className="bg-white rounded-t-lg border-b">
-                <CardTitle>Transfer Summary</CardTitle>
-                <CardDescription>
-                  Review your transfer details before confirming
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Transfer Type
-                      </h3>
-                      <p className="text-base font-medium flex items-center gap-2 mt-1">
-                        {transferType === "local" && (
-                          <CreditCard className="h-4 w-4" />
-                        )}
-                        {transferType === "international" && (
-                          <Globe className="h-4 w-4" />
-                        )}
-                        {transferType === "wire" && (
-                          <Landmark className="h-4 w-4" />
-                        )}
-                        {transferType === "local"
-                          ? "Local Transfer"
-                          : transferType === "international"
-                          ? "International Transfer"
-                          : "Wire Transfer"}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        From Account
-                      </h3>
-                      <p className="text-base font-medium mt-1">
-                        {
-                          accounts.find((acc) => acc.id === selectedAccount)
-                            ?.accountName
-                        }
-                        (*
-                        {accounts
-                          .find((acc) => acc.id === selectedAccount)
-                          ?.accountNumber.slice(-4)}
-                        )
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        To Recipient
-                      </h3>
-                      <p className="text-base font-medium mt-1">
-                        {recipientType === "existing"
-                          ? recipients.find(
-                              (rec) => rec.id === selectedRecipient
-                            )?.name
-                          : formData.recipientName}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Transfer Date
-                      </h3>
-                      <p className="text-base font-medium mt-1">Immediate</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Amount
-                      </h3>
-                      <p className="text-xl font-bold mt-1">
-                        $
-                        {Number(amount.replace(/,/g, "") || 0).toLocaleString(
-                          "en-US",
-                          {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Fee
-                      </h3>
-                      <p className="text-base font-medium mt-1">
-                        ${getFee().toFixed(2)}
-                      </p>
-                    </div>
-                    <Separator className="my-2" />
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Total
-                      </h3>
-                      <p className="text-xl font-bold mt-1">
-                        ${getTotal().toFixed(2)}
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Estimated Arrival
-                      </h3>
-                      <p className="text-base font-medium mt-1">
-                        {transferType === "local"
-                          ? "Same day"
-                          : transferType === "international"
-                          ? "1-3 business days"
-                          : "1-2 business days"}
-                      </p>
-                      <Badge
-                        variant="outline"
-                        className="mt-2 bg-green-50 text-green-700 border-green-200"
-                      >
-                        {transferType === "local" ? "No fee" : "Fee included"}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <Building className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-slate-700">
-                    By proceeding, you agree to our transfer terms and
-                    conditions. Transfers may be subject to review.
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-slate-900">
+                    Code sent to Authentication Device
                   </p>
+                  {/* <p className="text-sm text-slate-500">{maskedPhone || "Loading..."}</p> */}
                 </div>
-              </CardContent>
-              <CardFooter className="flex flex-col space-y-2 border-t pt-4 mt-2">
+              </div>
+              <CardDescription className="text-base">
+                {status === "transfer"
+                  ? "Enter the 6-digit code to confirm the transaction"
+                  : "Enter the 6-digit code to verify your account"}
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <form onSubmit={handleVerify} className="space-y-6">
+                <div className="flex justify-center gap-2 sm:gap-3">
+                  {otp.map((digit, index) => (
+                    <Input
+                      key={index}
+                      ref={(el) => {
+                        inputRefs.current[index] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      onPaste={index === 0 ? handlePaste : undefined}
+                      className={cn(
+                        "h-14 w-12 text-center text-lg font-semibold transition-all sm:h-16 sm:w-14",
+                        digit
+                          ? "border-primary bg-primary/5"
+                          : "border-slate-200"
+                      )}
+                      autoFocus={index === 0}
+                    />
+                  ))}
+                </div>
+
                 <Button
-                  className="w-full bg-amber-500"
-                  onClick={handleSubmit}
-                  disabled={loading}
+                  type="submit"
+                  className="w-full py-6 text-base font-medium"
+                  size="lg"
+                  disabled={isLoading || otp.join("").length !== 6}
                 >
-                  {loading ? "Processing..." : "Confirm Transfer"}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify Code"
+                  )}
                 </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleBack}
-                >
-                  Back to Edit
-                </Button>
-              </CardFooter>
-            </Card>
-          )}
-        </div>
-      </main>
+              </form>
+            </CardContent>
+
+            <CardFooter className="flex flex-col items-center border-t bg-slate-50 p-6">
+              <div className="mb-2 text-sm text-slate-500">
+                Didn't receive the code?
+              </div>
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={handleResendOtp}
+                disabled={!canResend}
+                className={cn(
+                  "h-auto text-sm font-medium",
+                  canResend
+                    ? "text-primary hover:text-primary/90"
+                    : "text-slate-400"
+                )}
+              >
+                {canResend ? (
+                  "Resend Code"
+                ) : (
+                  <>
+                    Resend code in{" "}
+                    <span className="font-semibold">
+                      {formatTime(timeLeft)}
+                    </span>
+                  </>
+                )}
+              </Button>
+            </CardFooter>
+          </>
+        )}
+      </Card>
     </div>
   );
 }
+

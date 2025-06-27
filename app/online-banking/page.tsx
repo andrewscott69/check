@@ -28,7 +28,7 @@ export default function OnlineBankingPage() {
               and deposit checks from your computer or mobile device.
             </p>
             
-            <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+            <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium" asChild>
               
                <Link href="/u/signup">
                   Enroll Now <ChevronRight className="ml-1 h-4 w-4" />

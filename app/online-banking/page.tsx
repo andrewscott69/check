@@ -27,14 +27,14 @@ export default function OnlineBankingPage() {
               Bank anywhere, anytime with our award-winning digital banking platform. Manage your accounts, pay bills,
               and deposit checks from your computer or mobile device.
             </p>
-            <Link href="/u/signup">
+            
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
               
-               <Link href="/contact#sendmsg">
+               <Link href="/u/signup">
                   Enroll Now <ChevronRight className="ml-1 h-4 w-4" />
                </Link>  
             </Button>
-              </Link>
+              
           </div>
         </div>
       </section>

@@ -96,9 +96,7 @@ export function RecentTransactions({
     };
     return `${symbolMap[currency] || "$"}${amount.toFixed(2)}`;
   };
-  
 
- 
   const generateReceiptPDF = (tx: Transaction) => {
     const doc = new jsPDF();
     const logo = new Image();
@@ -121,8 +119,7 @@ export function RecentTransactions({
       doc.setFontSize(16);
       doc.text("Transaction Receipt", 105, 64, { align: "center" });
 
-      const displayName =
-        tx.recipientName || tx.merchantName || "N/A";
+      const displayName = tx.recipientName || tx.merchantName || "N/A";
       const accountNumber =
         tx.recipientAcount || tx.toAccount || tx.iban || "N/A";
 
@@ -160,10 +157,6 @@ export function RecentTransactions({
       doc.save(`Transaction-${tx.id}.pdf`);
     };
   };
-
-
-
- 
 
   const getTransactionIcon = (type: TransactionType) => {
     switch (type) {
@@ -282,22 +275,39 @@ export function RecentTransactions({
       {transactions.slice(0, 5).map((transaction) => (
         <div key={transaction.id} className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(transaction.type)}`}>
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-full ${getTransactionIconBg(
+                transaction.type
+              )}`}
+            >
               {getTransactionIcon(transaction.type)}
             </div>
             <div>
               <div className="font-medium">
-                {transaction.description || `${transaction.type.charAt(0)}${transaction.type.slice(1).toLowerCase()}`}
+                {transaction.description ||
+                  `${transaction.type.charAt(0)}${transaction.type
+                    .slice(1)
+                    .toLowerCase()}`}
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{formatDate(transaction.createdAt)}</span>
+                <span className="text-sm text-muted-foreground">
+                  {formatDate(transaction.createdAt)}
+                </span>
                 {getStatusBadge(transaction.status)}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className={`text-sm font-medium ${getTransactionAmountColor(transaction.type)}`}>
-              {`${getTransactionAmountPrefix(transaction.type)}${getCurrencySymbol(transaction.currencyType)}${Math.abs(transaction.amount).toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
+            <div
+              className={`text-sm font-medium ${getTransactionAmountColor(
+                transaction.type
+              )}`}
+            >
+              {`${getTransactionAmountPrefix(
+                transaction.type
+              )}${getCurrencySymbol(transaction.currencyType)}${Math.abs(
+                transaction.amount
+              ).toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -308,10 +318,14 @@ export function RecentTransactions({
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setOpenTransaction(transaction)}>
+                <DropdownMenuItem
+                  onClick={() => setOpenTransaction(transaction)}
+                >
                   View Details
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => generateReceiptPDF(transaction)}>
+                <DropdownMenuItem
+                  onClick={() => generateReceiptPDF(transaction)}
+                >
                   Download Receipt
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -333,13 +347,45 @@ export function RecentTransactions({
           </DialogHeader>
           {openTransaction && (
             <div className="space-y-2 text-sm">
-              <p><strong>ID:</strong> {openTransaction.id}</p>
-              <p><strong>Amount:</strong> ${openTransaction.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}</p>
-              <p><strong>Status:</strong> {openTransaction.status}</p>
-              <p><strong>Type:</strong> {openTransaction.type}</p>
-              <p><strong>Date:</strong> {new Date(openTransaction.createdAt).toLocaleString()}</p>
-              <p><strong>Account:</strong> {openTransaction.accountName}</p>
-              {openTransaction.description && <p><strong>Description:</strong> {openTransaction.description}</p>}
+              <p>
+                <strong>ID:</strong> {openTransaction.id}
+              </p>
+              <p>
+                <strong>Amount:</strong> $
+                {openTransaction.amount.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                })}
+              </p>
+              <p>
+                <strong>Status:</strong> {openTransaction.status}
+              </p>
+              <p>
+                <strong>Type:</strong> {openTransaction.type}
+              </p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(openTransaction.createdAt).toLocaleString()}
+              </p>
+              <p>
+                <strong>Recipient Name:</strong>{" "}
+                {openTransaction.recipientName ||
+                  openTransaction.merchantName ||
+                  openTransaction.accountName ||
+                  "N/A"}
+              </p>
+              <p>
+                <strong>Recipient Account:</strong>{" "}
+                {openTransaction.recipientAcount ||
+                  openTransaction.toAccount ||
+                  openTransaction.iban ||
+                  "N/A"}
+              </p>
+
+              {openTransaction.description && (
+                <p>
+                  <strong>Description:</strong> {openTransaction.description}
+                </p>
+              )}
             </div>
           )}
           <DialogClose asChild>

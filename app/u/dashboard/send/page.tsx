@@ -157,11 +157,11 @@ export default function TransferPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+  
     const selectedAccountData = accounts.find(
       (acc) => acc.id === selectedAccount
     );
-
+  
     const transferData = {
       transferType,
       fromAccountId: selectedAccount,
@@ -183,23 +183,27 @@ export default function TransferPage() {
       scheduledDate: formData.transferDate,
       status: "unverified",
     };
-
+  
     try {
       const res = await fetch("/api/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transferData),
       });
-
+  
       const result = await res.json();
-
+  
       if (result.success && result.status === "transfer") {
-        // Save session for OTP verification page
+        // case: OTP flow
         sessionStorage.setItem("transferData", JSON.stringify(transferData));
         sessionStorage.setItem("verificationEmail", result.email);
         sessionStorage.setItem("verificationStatus", "transfer");
-
+  
         router.push("/u/verify-otp");
+      } else if (result.success && result.status === "unverified") {
+        // case: unverified, not auto-approved
+        setTransferResult(result);
+        setShowSuccess(true);
       } else {
         alert(result.error || "Transfer failed.");
       }
@@ -210,7 +214,7 @@ export default function TransferPage() {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     const transferData = sessionStorage.getItem("transferData");
     if (!transferData) return;

@@ -675,7 +675,7 @@ export default function DashboardPage() {
                           </div>
                           <div className="grid grid-cols-2 gap-1">
                             <div className="text-sm font-medium">
-                              Routing Number
+                              Swift/BIC Code
                             </div>
                             <div className="flex items-center justify-end gap-1">
                               <span className="font-mono">
@@ -688,7 +688,7 @@ export default function DashboardPage() {
                                 onClick={() =>
                                   copyToClipboard(
                                     selectedAccountData.routingNumber,
-                                    "Routing number"
+                                    "Swift/BIC Code"
                                   )
                                 }
                               >

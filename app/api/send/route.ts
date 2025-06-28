@@ -62,42 +62,43 @@ export async function POST(request: NextRequest) {
     }
 
     // STEP 1: Handle OTP Verification
-    if (status !== "verified") {
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // If transaction not yet verified
+if (status !== "verified") {
+  const fee = fees[transferType as keyof typeof fees] || 0;
+  const totalAmount = amount + fee;
 
-      await prisma.verificationToken.create({
-        data: {
-          userId: sourceAccount.userId,
-          token: otp,
-          type: TokenType.TWO_FACTOR,
-          expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
-        },
-      });
+  const estimatedArrival = getEstimatedArrival(transferType);
+  const transactionId = `TXN${Date.now()}${Math.random()
+    .toString(36)
+    .substring(2, 6)
+    .toUpperCase()}`;
 
-      await sendEmail({
-        to: sourceAccount.user.email,
-        subject: "Transfer Verification OTP",
-        title: "Verify Your Transfer",
-        message: `
-          Hello ${sourceAccount.user.firstName},<br /><br />
-          You're about to transfer <strong>$${amount.toFixed(
-            2
-          )}</strong> to <strong>${recipientData.name}</strong>.<br /><br />
-          Use the OTP below to verify your transaction:<br />
-          <h2>${otp}</h2>
-          <small>This code expires in 10 minutes.</small>
-        `,
-        footerNote: "If you didn’t initiate this, please contact support immediately.",
-      });
+  const details = {
+    amount,
+    fee,
+    total: totalAmount,
+    transferType: capitalize(transferType),
+    recipient: recipientData.name,
+    estimatedArrival,
+    status: "UNVERIFIED",
+    requiresApproval: true,
+    isApproved: false,
+  };
 
-      return NextResponse.json({
-        success: true,
-        message: "OTP sent to email",
-        next: "/u/verify-otp",
-        status: "transfer",
-        email: sourceAccount.user.email,
-      });
-    }
+  // If user is NOT auto-approved: return details without creating transaction
+  if (!sourceAccount.user.autoApprovedTransaction) {
+    return NextResponse.json({
+      success: true,
+      status: "unverified",
+      transactionId,
+      message: "Transfer submitted for approval.",
+      details,
+    });
+  }
+
+  // If user IS auto-approved, fall through to transaction creation below
+}
+
 
     // STEP 2: Proceed with Transaction
     const transactionId = `TXN${Date.now()}${Math.random()

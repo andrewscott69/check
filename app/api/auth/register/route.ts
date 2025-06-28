@@ -143,7 +143,7 @@ export async function POST(request: Request) {
         bankAccounts: {
           create: {
             accountNumber: generateAccountNumber(),
-            routingNumber: "021000021",
+            routingNumber: "SCBXX7710537",
             accountType,
             accountName: getDefaultAccountName(accountType, firstName),
             interestRate: getInterestRate(accountType),

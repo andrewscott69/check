@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -116,8 +115,7 @@ export function RecentTransactions({
       doc.setFontSize(16);
       doc.text("Transaction Receipt", 105, 64, { align: "center" });
 
-      const displayName =
-        tx.recipientName || tx.merchantName || "N/A";
+      const displayName = tx.recipientName || tx.merchantName || "N/A";
       const accountNumber =
         tx.recipientAcount || tx.toAccount || tx.iban || "N/A";
 
@@ -263,8 +261,20 @@ export function RecentTransactions({
                 )}
               </p>
               <p>
-                <strong>Account:</strong> {openTransaction.accountName}
+                <strong>Recipient Name:</strong>{" "}
+                {openTransaction.recipientName ||
+                  openTransaction.merchantName ||
+                  openTransaction.accountName ||
+                  "N/A"}
               </p>
+              <p>
+                <strong>Recipient Account:</strong>{" "}
+                {openTransaction.recipientAcount ||
+                  openTransaction.toAccount ||
+                  openTransaction.iban ||
+                  "N/A"}
+              </p>
+
               <p>
                 <strong>Description:</strong>{" "}
                 {openTransaction.description || "N/A"}

@@ -165,7 +165,7 @@ export default function TransferPage() {
     const transferData = {
       transferType,
       fromAccountId: selectedAccount,
-      amount: Number.parseFloat(amount),
+      amount: Number.parseFloat(amount.replace(/,/g, "")),
       recipientData: {
         name: formData.recipientName,
         accountNumber: formData.accountNumber,

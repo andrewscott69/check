@@ -67,6 +67,13 @@ export interface Transaction {
   txHash?: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
+  reference?: string;
+  recipientName?: string;
+  recipientBank?: string;
+  toAccount?: string;
+  merchantName?: string;
+  iban?: string;
+  recipientAcount?: string;
 }
 
 interface RecentTransactionsProps {
@@ -79,80 +86,81 @@ export function RecentTransactions({
   const [openTransaction, setOpenTransaction] = useState<Transaction | null>(
     null
   );
+  const formatAmount = (amount: number, currency: CurrencyType) => {
+    const symbolMap: Record<CurrencyType, string> = {
+      USD: "$",
+      EUR: "€",
+      GBP: "£",
+      BTC: "₿",
+      ETH: "Ξ",
+    };
+    return `${symbolMap[currency] || "$"}${amount.toFixed(2)}`;
+  };
+  
 
  
+  const generateReceiptPDF = (tx: Transaction) => {
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = "/Silver-Crest.png";
+    logo.onload = () => {
+      doc.addImage(logo, "PNG", 85, 10, 40, 20);
+      doc.setFontSize(18);
+      doc.text("Silver Crest Bank", 105, 35, { align: "center" });
+      doc.setFontSize(12);
+      doc.text(
+        "Avenue de la Liberté 25, 2900 Porrentruy, Switzerland",
+        105,
+        42,
+        { align: "center" }
+      );
+      doc.text("support@silvercrest.com | +41 32 466 78 90", 105, 48, {
+        align: "center",
+      });
+      doc.line(20, 54, 190, 54);
+      doc.setFontSize(16);
+      doc.text("Transaction Receipt", 105, 64, { align: "center" });
 
-  const generateReceiptPDF = (transaction: Transaction) => {
-  const doc = new jsPDF();
+      const displayName =
+        tx.recipientName || tx.merchantName || "N/A";
+      const accountNumber =
+        tx.recipientAcount || tx.toAccount || tx.iban || "N/A";
 
-  // Add bank logo - must be in public directory
-  const logoImg = new Image();
-  logoImg.src = "/Silver-Crest.png";
-  logoImg.onload = () => {
-    doc.addImage(logoImg, "PNG", 85, 10, 40, 20);
+      const details = [
+        ["Transaction ID:", tx.id],
+        ["Type:", tx.type],
+        ["Status:", tx.status],
+        ["Amount:", formatAmount(tx.amount, tx.currencyType)],
+        ["Fee:", formatAmount(tx.fee, tx.currencyType)],
+        ["Account Name:", displayName],
+        ["Account Number:", accountNumber],
+        ["Date:", new Date(tx.createdAt).toLocaleString()],
+        ["Description:", tx.description || "N/A"],
+        ["Bank:", tx.recipientBank || "N/A"],
+        ["Reference:", tx.reference || "N/A"],
+      ];
 
-    doc.setFontSize(18);
-    doc.text("Silver Crest Bank", 105, 35, { align: "center" });
-    doc.setFontSize(12);
-    doc.text("Avenue de la Liberté 25, 2900 Porrentruy, Switzerland", 105, 42, { align: "center" });
-    doc.text("support@silvercrest.com | ++41 32 466 78 90", 105, 48, {
-      align: "center",
-    });
+      let y = 80;
+      doc.setFontSize(12);
+      details.forEach(([label, value]) => {
+        doc.text(label, 30, y);
+        doc.text(String(value), 90, y);
+        y += 10;
+      });
 
-    doc.setLineWidth(0.5);
-    doc.line(20, 54, 190, 54);
+      doc.line(20, y + 10, 190, y + 10);
+      doc.setFontSize(10);
+      doc.text(
+        "This receipt is computer-generated and does not require a signature.",
+        105,
+        y + 20,
+        { align: "center" }
+      );
 
-    doc.setFontSize(16);
-    doc.text("Transaction Receipt", 105, 64, { align: "center" });
-
-    const details = [
-      ["Transaction ID:", transaction.id],
-      ["Type:", transaction.type],
-      ["Status:", transaction.status],
-      ["Amount:", `$${transaction.amount.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-      })}`],
-      ["Currency:", transaction.currencyType],
-      ["Fee:", `$${transaction.fee.toFixed(2)}`],
-      ["Account Name:", transaction.accountName],
-      ["Date:", new Date(transaction.createdAt).toLocaleString()],
-      ["Description:", transaction.description || "N/A"],
-    ];
-
-    let y = 80;
-    doc.setFontSize(12);
-    details.forEach(([label, value]) => {
-      doc.text(`${label}`, 30, y);
-      doc.text(`${value}`, 90, y);
-      y += 10;
-    });
-
-    // Footer / Disclaimer
-    doc.setLineWidth(0.1);
-    doc.line(20, y + 10, 190, y + 10);
-    doc.setFontSize(10);
-    doc.text(
-      "This receipt is computer-generated and does not require a signature.",
-      105,
-      y + 20,
-      { align: "center" }
-    );
-
-    doc.save(`Transaction-${transaction.id}.pdf`);
+      doc.save(`Transaction-${tx.id}.pdf`);
+    };
   };
 
-  // If the logo fails to load, fallback
-  logoImg.onerror = () => {
-    doc.setFontSize(18);
-    doc.text("FirstTrust National Bank", 105, 20, { align: "center" });
-    doc.setFontSize(12);
-    doc.text("123 Finance Ave, Lagos, Nigeria", 105, 28, { align: "center" });
-    doc.text("support@firsttrustbank.com | +234 700 000 0000", 105, 34, {
-      align: "center",
-    });
-    doc.save(`Transaction-${transaction.id}.pdf`);
-  };
-}
 
 
  

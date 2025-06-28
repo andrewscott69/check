@@ -1,4 +1,4 @@
-// components/RecentTransactions.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -46,6 +46,10 @@ interface Transaction {
   reference?: string;
   recipientName?: string;
   recipientBank?: string;
+  toAccount?: string;
+  merchantName?: string;
+  iban?: string;
+  recipientAcount?: string;
 }
 
 interface Props {
@@ -112,16 +116,21 @@ export function RecentTransactions({
       doc.setFontSize(16);
       doc.text("Transaction Receipt", 105, 64, { align: "center" });
 
+      const displayName =
+        tx.recipientName || tx.merchantName || "N/A";
+      const accountNumber =
+        tx.recipientAcount || tx.toAccount || tx.iban || "N/A";
+
       const details = [
         ["Transaction ID:", tx.id],
         ["Type:", tx.type],
         ["Status:", tx.status],
         ["Amount:", formatAmount(tx.amount, tx.currencyType)],
         ["Fee:", formatAmount(tx.fee, tx.currencyType)],
-        ["Account Name:", tx.accountName],
+        ["Account Name:", displayName],
+        ["Account Number:", accountNumber],
         ["Date:", new Date(tx.createdAt).toLocaleString()],
         ["Description:", tx.description || "N/A"],
-        ["Recipient:", tx.recipientName || "N/A"],
         ["Bank:", tx.recipientBank || "N/A"],
         ["Reference:", tx.reference || "N/A"],
       ];
@@ -140,9 +149,7 @@ export function RecentTransactions({
         "This receipt is computer-generated and does not require a signature.",
         105,
         y + 20,
-        {
-          align: "center",
-        }
+        { align: "center" }
       );
 
       doc.save(`Transaction-${tx.id}.pdf`);
@@ -180,14 +187,15 @@ export function RecentTransactions({
                   maximumFractionDigits: 2,
                 })}`}
               </TableCell>
-
               <TableCell>
                 <Badge className={getStatusBadgeClass(tx.status)}>
                   {tx.status}
                 </Badge>
               </TableCell>
               <TableCell>{tx.reference || "-"}</TableCell>
-              <TableCell>{tx.recipientName || "-"}</TableCell>
+              <TableCell>
+                {tx.recipientName || tx.merchantName || tx.accountName || "-"}
+              </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -266,7 +274,10 @@ export function RecentTransactions({
               </p>
               <p>
                 <strong>Recipient:</strong>{" "}
-                {openTransaction.recipientName || "N/A"}
+                {openTransaction.recipientName ||
+                  openTransaction.merchantName ||
+                  openTransaction.accountName ||
+                  "N/A"}
               </p>
               <p>
                 <strong>Bank:</strong> {openTransaction.recipientBank || "N/A"}

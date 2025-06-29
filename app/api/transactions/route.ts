@@ -18,22 +18,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
-    const skip = (page - 1) * limit;
-
-    // Total count for pagination
-    const total = await prisma.transaction.count({
-      where: { userId: decoded.userId },
-    });
-
-    // Paginated transactions
     const transactions = await prisma.transaction.findMany({
       where: { userId: decoded.userId },
       orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
       include: {
         bankAccount: true,
         card: true,
@@ -41,9 +28,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({
-      page,
-      limit,
-      total,
+      success: true,
       transactions,
     });
   } catch (error) {

@@ -273,17 +273,9 @@ function getEstimatedArrival(transferType: string): string {
 }
 
 function getProcessingDelay(transferType: string): number {
-  switch (transferType) {
-    case "local":
-      return 30_000;
-    case "international":
-      return 120_000;
-    case "wire":
-      return 60_000;
-    default:
-      return 30_000;
-  }
+  return 1_000; // 1 second for all transfers
 }
+
 
 function getStatusMessage(
   transferType: string,

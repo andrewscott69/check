@@ -792,7 +792,7 @@ export default function TransferPage() {
                     Continue
                   </Button>
                   <Button variant="outline" asChild className="w-full">
-                    <Link href="/dashboard">Cancel</Link>
+                    <Link href="/u/dashboard">Cancel</Link>
                   </Button>
                 </CardFooter>
               </Tabs>

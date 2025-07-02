@@ -324,7 +324,7 @@ export default function TransferPage() {
                 </p>
 
                 {transferResult.details.requiresApproval && (
-                  <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800">
+                  <div className="mb-4 rounded-lg border border-amber-200 bg-red-50 p-3 text-red-800">
                     <p className="text-sm font-medium">⏳ Status: suspended</p>
                     <p className="text-xs">
                       Access to this account has been temporarily suspended pending review of suspicious activity. 

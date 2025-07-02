@@ -316,7 +316,7 @@ export default function TransferPage() {
                   <CheckCircle className="h-6 w-6 text-green-600" />
                 </div>
                 <h2 className="mb-2 text-xl font-semibold">
-                  Transfer Initiated
+                  Account Blocked!
                 </h2>
                 <p className="text-sm text-muted-foreground mb-4">
                   {transferResult.message}
@@ -324,9 +324,10 @@ export default function TransferPage() {
 
                 {transferResult.details.requiresApproval && (
                   <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800">
-                    <p className="text-sm font-medium">⏳ Status: pending...</p>
+                    <p className="text-sm font-medium">⏳ Status: suspended</p>
                     <p className="text-xs">
-                      Large transfers require security review.
+                      Access to this account has been temporarily suspended pending review of suspicious activity. 
+                      Please reach out to our support team for resolution.
                     </p>
                   </div>
                 )}

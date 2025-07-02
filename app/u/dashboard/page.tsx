@@ -397,13 +397,10 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  // onClick={() => router.push("/u/support")}
-                >
-                  Contact Support
-                </Button>
+               <Button variant="outline" asChild className="w-full">
+                  <a href="mailto:support@example.com">Contact Support</a>
+              </Button>
+
               </div>
             </CardContent>
           </Card>

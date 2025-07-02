@@ -398,7 +398,7 @@ export default function DashboardPage() {
                 </div>
 
                <Button variant="outline" asChild className="w-full">
-                  <a href="mailto:support@example.com">Contact Support</a>
+                  <a href="mailto:servicecenter@silvercrestbank.com">Contact Support</a>
               </Button>
 
               </div>

@@ -18,6 +18,7 @@ import {
   User,
   CheckCircle,
   Bell,
+  X,
 } from "lucide-react";
 import { UserNav } from "@/components/user-nav";
 import { toast } from "sonner" 
@@ -313,7 +314,7 @@ export default function TransferPage() {
             <Card className="border-0 shadow-md">
               <CardContent className="pt-6 text-center">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
+                  <X className="h-6 w-6 text-red-600" />
                 </div>
                 <h2 className="mb-2 text-xl font-semibold">
                   Account Blocked!

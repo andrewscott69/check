@@ -49,7 +49,7 @@ export function TransactionStatusCard({ transaction }: TransactionStatusCardProp
 
   const getStatusMessage = (status: string, requiresApproval?: boolean) => {
     if (requiresApproval && status.toLowerCase() === "pending") {
-      return "Your transaction is pending admin approval. This may take 1-2 business days."
+      return "Your transaction is pending. This may take 1-2 business days."
     }
 
     switch (status.toLowerCase()) {
@@ -105,11 +105,12 @@ export function TransactionStatusCard({ transaction }: TransactionStatusCardProp
         </div>
 
         {transaction.requiresApproval && (
-          <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800">
+          <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-red-800">
             <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
               <p className="font-medium">Security Review Required</p>
-              <p>Large transfers require a security review for security purposes.</p>
+              <p>We've detected unusual activity and have temporarily suspended this transaction. 
+                Please contact support for further assistance.</p>
             </div>
           </div>
         )}

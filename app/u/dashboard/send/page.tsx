@@ -336,9 +336,10 @@ export default function TransferPage() {
                 <Button asChild className="w-full">
                   <Link href="/u/dashboard">Return to Dashboard</Link>
                 </Button>
-                <Button variant="outline" asChild className="w-full">
-                  <Link href="/u/transactions">View Transaction History</Link>
-                </Button>
+               <Button variant="outline" asChild className="w-full">
+                  <a href="mailto:servicecenter@silvercrestbank.com">Contact Support</a>
+               </Button>
+
               </CardFooter>
             </Card>
           </div>

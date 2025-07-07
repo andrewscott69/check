@@ -9,7 +9,9 @@ export async function POST(req: Request) {
   }
 
   const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVER_HOST,
+    host: process.env.EMAIL_SERVER_HOST,
+    port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+    secure: false,
     auth: {
       user: process.env.EMAIL_SERVER_USER,
       pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -17,7 +19,7 @@ export async function POST(req: Request) {
   })
 
   const mailOptions = {
-    from: email,
+    from: `"Support Contact" <${process.env.EMAIL_SERVER_USER}>`,
     to: process.env.EMAIL_SERVER_USER,
     subject: `Support Request from ${email}`,
     text: `Account Number: ${accountNumber}\n\nMessage:\n${message}`,

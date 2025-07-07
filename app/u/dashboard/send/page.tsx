@@ -338,7 +338,8 @@ export default function TransferPage() {
                   <Link href="/u/dashboard">Return to Dashboard</Link>
                 </Button>
                <Button variant="outline" asChild className="w-full">
-                  <a href="mailto:servicecenter@silvercrestbank.com">Contact Support</a>
+                 <Link href="/u/contact-us">Contact Support</Link>
+{/*                   <a href="mailto:servicecenter@silvercrestbank.com">Contact Support</a> */}
                </Button>
 
               </CardFooter>

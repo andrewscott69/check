@@ -69,7 +69,7 @@ const branches = [
     countryCode: "uk",
   },
   {
-    title: "Australian Office",
+    title: "Australian Branch Office",
     description: "Full service location",
     address: "P.O. Box 330",
     location: "330 Collins St, Melbourne VIC 3000",

@@ -68,6 +68,15 @@ const branches = [
     mapsQuery: "P.O. Box 174, Leeds LS1 1EL, United Kingdom",
     countryCode: "uk",
   },
+  {
+    title: "Australian Branch Office",
+    description: "Full service location",
+    address: "P.O. Box 330",
+    location: "330 Collins St, Melbourne VIC 3000",
+    hours: ["Mon-Fri: 9:00 AM - 5:00 PM"],
+    mapsQuery: "330 Collins St, Melbourne VIC 3000",
+    countryCode: "au",
+  },
 ]
 
 

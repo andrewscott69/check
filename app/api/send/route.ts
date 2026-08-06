@@ -223,10 +223,13 @@ export async function POST(request: NextRequest) {
     );
 
     if (initialStatus === TransactionStatus.PROCESSING) {
-      setTimeout(
-        async () => await processTransaction(transactionId, transferType),
-        getProcessingDelay(transferType)
+      // Serverless functions can be torn down as soon as the response is sent,
+      // so a fire-and-forget setTimeout here would often never run. Awaiting
+      // it keeps the delay but guarantees the transaction actually finalizes.
+      await new Promise((resolve) =>
+        setTimeout(resolve, getProcessingDelay(transferType))
       );
+      await processTransaction(transactionId, transferType);
     }
 
     return NextResponse.json({
